@@ -1,1 +1,15 @@
-testing
+@Bean
+  public Trigger jobOneTrigger()
+  {
+    SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
+        .simpleSchedule()
+        .withIntervalInSeconds(10)
+        .repeatForever();
+
+    return TriggerBuilder
+        .newTrigger()
+        .forJob(jobOneDetail())
+        .withIdentity("jobOneTrigger")
+        .withSchedule(scheduleBuilder)
+        .build();
+  }
