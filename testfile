@@ -8,6 +8,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+   @Autowired
+    private MyTasklet myTasklet; // Inject the tasklet
+
+    @Bean
+    public Step myStep() {
+        return new StepBuilder("myStep") // Step name
+                .tasklet(myTasklet) // Reference the tasklet
+                .build(); // Build the Step
+    }
+
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration extends DefaultBatchConfigurer {
