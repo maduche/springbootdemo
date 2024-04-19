@@ -1,15 +1,39 @@
-@Bean
-  public Trigger jobOneTrigger()
-  {
-    SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
-        .simpleSchedule()
-        .withIntervalInSeconds(10)
-        .repeatForever();
+import javax.sql.DataSource;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-    return TriggerBuilder
-        .newTrigger()
-        .forJob(jobOneDetail())
-        .withIdentity("jobOneTrigger")
-        .withSchedule(scheduleBuilder)
-        .build();
-  }
+@Configuration
+@EnableBatchProcessing
+public class BatchConfiguration extends DefaultBatchConfigurer {
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        // Do nothing or leave it empty to disable Spring Batch's auto-configuration of datasource
+    }
+
+    @Override
+    protected DataSource createDataSource() {
+        // Return an in-memory H2 datasource
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .build();
+    }
+
+    // Other batch-related beans can be configured here, such as jobBuilderFactory, stepBuilderFactory, etc.
+    @Bean
+    public JobBuilderFactory jobBuilderFactory() {
+        return new JobBuilderFactory(jobRepository());
+    }
+
+    @Bean
+    public StepBuilderFactory stepBuilderFactory() {
+        return new StepBuilderFactory(jobRepository(), transactionManager());
+    }
+}
+
