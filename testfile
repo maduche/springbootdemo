@@ -1,49 +1,30 @@
-import javax.sql.DataSource;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import java.time.LocalDate;
+import java.util.List;
 
-   @Autowired
-    private MyTasklet myTasklet; // Inject the tasklet
+public class YourService {
 
-    @Bean
-    public Step myStep() {
-        return new StepBuilder("myStep") // Step name
-                .tasklet(myTasklet) // Reference the tasklet
-                .build(); // Build the Step
+    private final MongoTemplate mongoTemplate;
+
+    public YourService(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
     }
 
-@Configuration
-@EnableBatchProcessing
-public class BatchConfiguration extends DefaultBatchConfigurer {
+    public List<YourEntity> findEntitiesWithMultipleConditions() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDateMinus5Days = currentDate.minusDays(5);
+        LocalDate currentDatePlus11Days = currentDate.plusDays(11);
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        // Do nothing or leave it empty to disable Spring Batch's auto-configuration of datasource
-    }
+        Criteria criteria = new Criteria().andOperator(
+                Criteria.where("field1").is("pending"),
+                Criteria.where("dateField1").gte("dateField2 + 1000 * 60 * 60 * 24 * 11"),
+                Criteria.where("dateField1").lte(currentDateMinus5Days)
+        );
 
-    @Override
-    protected DataSource createDataSource() {
-        // Return an in-memory H2 datasource
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .build();
-    }
+        Query query = new Query(criteria);
 
-    // Other batch-related beans can be configured here, such as jobBuilderFactory, stepBuilderFactory, etc.
-    @Bean
-    public JobBuilderFactory jobBuilderFactory() {
-        return new JobBuilderFactory(jobRepository());
-    }
-
-    @Bean
-    public StepBuilderFactory stepBuilderFactory() {
-        return new StepBuilderFactory(jobRepository(), transactionManager());
+        return mongoTemplate.find(query, YourEntity.class);
     }
 }
-
