@@ -1,30 +1,29 @@
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import java.time.LocalDate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.stereotype.Service;
+import java.util.Date;
 import java.util.List;
 
+@Service
 public class YourService {
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
-    private final MongoTemplate mongoTemplate;
-
-    public YourService(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
-
-    public List<YourEntity> findEntitiesWithMultipleConditions() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate currentDateMinus5Days = currentDate.minusDays(5);
-        LocalDate currentDatePlus11Days = currentDate.plusDays(11);
-
-        Criteria criteria = new Criteria().andOperator(
-                Criteria.where("field1").is("pending"),
-                Criteria.where("dateField1").gte("dateField2 + 1000 * 60 * 60 * 24 * 11"),
-                Criteria.where("dateField1").lte(currentDateMinus5Days)
+    public List<YourDocument> findDocumentsWithCondition() {
+        // Aggregation pipeline to add 10 days to datefield2
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.project()
+                    .andExpression("datefield2")
+                    .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
+                    .as("datefield2Plus10Days"),
+                Aggregation.match(Aggregation.expr("{$expr: {$gte: ['$datefield1', '$datefield2Plus10Days']}}")),
+                Aggregation.match(Aggregation.matchOperation().and("status").is("active"))
         );
 
-        Query query = new Query(criteria);
+        // Execute the aggregation pipeline
+        List<YourDocument> result = mongoTemplate.aggregate(aggregation, YourDocument.class).getMappedResults();
 
-        return mongoTemplate.find(query, YourEntity.class);
+        return result;
     }
 }
