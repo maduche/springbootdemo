@@ -1,6 +1,7 @@
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -14,11 +15,12 @@ public class YourService {
         // Aggregation pipeline to add 10 days to datefield2
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.project()
-                    .andExpression("datefield2")
-                    .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
-                    .as("datefield2Plus10Days"),
-                Aggregation.match(Aggregation.expr("{$expr: {$gte: ['$datefield1', '$datefield2Plus10Days']}}")),
-                Aggregation.match(Aggregation.matchOperation().and("status").is("active"))
+                        .andExpression("datefield2")
+                        .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
+                        .as("datefield2Plus10Days"),
+                Aggregation.match(
+                        Aggregation.gte("datefield1", "$datefield2Plus10Days")
+                )
         );
 
         // Execute the aggregation pipeline
