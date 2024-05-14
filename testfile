@@ -2,6 +2,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class YourService {
                         .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
                         .as("datefield2Plus10Days"),
                 Aggregation.match(
-                        Aggregation.gte("datefield1", "$datefield2Plus10Days")
+                        Criteria.where("datefield1").gte("$datefield2Plus10Days")
                 )
         );
 
