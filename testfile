@@ -30,3 +30,49 @@ public class YourService {
         return result;
     }
 }
+
+
+--------------------------
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class YourService {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    public List<YourDocument> findDocumentsWithCondition() {
+        // Typed part of the aggregation pipeline to add 10 days to datefield2
+        TypedAggregation<YourDocument> typedAggregation = Aggregation.newAggregation(YourDocument.class,
+                Aggregation.project()
+                        .andExpression("datefield2")
+                        .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
+                        .as("datefield2Plus10Days")
+        );
+
+        // Convert the typed aggregation to untyped aggregation
+        Aggregation untypedAggregation = typedAggregation.toAggregation();
+
+        // Untyped part of the aggregation pipeline to include additional field conditions
+        untypedAggregation = untypedAggregation.withOptions(Aggregation.newAggregationOptions().allowDiskUse(true).build());
+        untypedAggregation = untypedAggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("datefield1").gte("$datefield2Plus10Days"),
+                        Criteria.where("anotherField").is("someValue")
+                )
+        );
+
+        // Execute the mixed aggregation pipeline
+        List<YourDocument> result = mongoTemplate.aggregate(untypedAggregation, YourDocument.class).getMappedResults();
+
+        return result;
+    }
+}
+
