@@ -135,3 +135,10 @@ public class YourService {
 
         return mongoTemplate.find(query, YourEntity.class);
     }
+
+-------------------
+   Criteria criteria = new Criteria().andOperator(
+                Criteria.where("field1").is("pending"),
+                Criteria.where("dateField1").gte("dateField2 + 1000 * 60 * 60 * 24 * 11"),
+                Criteria.where("dateField1").lte(currentDateMinus5Days)
+        );
