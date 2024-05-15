@@ -73,3 +73,43 @@ public class YourService {
         return result;
     }
 }
+
+
+-----------------------------
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class YourService {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    public List<YourDocument> findDocumentsWithCondition() {
+        // Get the current date
+        Date currentDate = new Date();
+
+        // Aggregation pipeline to include additional field conditions
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.project()
+                        .andExpression("datefield2")
+                        .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
+                        .as("datefield2Plus10Days"),
+                Aggregation.match(
+                        Criteria.where("datefield1").gte("$datefield2Plus10Days")
+                                .and("anotherField").is("someValue")
+                )
+        );
+
+        // Execute the aggregation pipeline
+        List<YourDocument> result = mongoTemplate.aggregate(aggregation, YourDocument.class).getMappedResults();
+
+        return result;
+    }
+}
+
