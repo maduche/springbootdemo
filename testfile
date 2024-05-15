@@ -126,3 +126,12 @@ public class YourService {
                 addDays,
                 compareDates
         );
+
+-----------------------------
+   public List<YourEntity> compareFieldsWithOffset() {
+        Criteria criteria = Criteria.where("dateField1").gte("dateField2 + 1000 * 60 * 60 * 24 * 11"); // Using the $gte operator
+
+        Query query = new Query(criteria);
+
+        return mongoTemplate.find(query, YourEntity.class);
+    }
