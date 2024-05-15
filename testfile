@@ -1,8 +1,9 @@
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,27 +13,28 @@ public class YourService {
     private MongoTemplate mongoTemplate;
 
     public List<YourDocument> findDocumentsWithCondition() {
-        // Typed part of the aggregation pipeline to add 10 days to datefield2
-        TypedAggregation<YourDocument> typedAggregation = Aggregation.newAggregation(YourDocument.class,
+        // Get the current date
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+
+        // Add 10 days to the current date to get datefield2Plus10Days
+        cal.add(Calendar.DATE, 10);
+        Date datefield2Plus10Days = cal.getTime();
+
+        // Aggregation pipeline to add 10 days to datefield2 and include additional field conditions
+        Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.project()
                         .andExpression("datefield2")
                         .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
-                        .as("datefield2Plus10Days")
-        );
-
-        // Untyped part of the aggregation pipeline to include additional field conditions
-        Aggregation untypedAggregation = typedAggregation.getAggregationOperationContext().getAggregation();
-
-        untypedAggregation = untypedAggregation.withOptions(Aggregation.newAggregationOptions().allowDiskUse(true).build());
-        untypedAggregation = untypedAggregation.match(
-                new Criteria().andOperator(
-                        Criteria.where("datefield1").gte("$datefield2Plus10Days"),
-                        Criteria.where("anotherField").is("someValue")
+                        .as("datefield2Plus10Days"),
+                Aggregation.match(
+                        Criteria.where("datefield1").gte(datefield2Plus10Days)
+                                .and("anotherField").is("someValue")
                 )
         );
 
-        // Execute the mixed aggregation pipeline
-        List<YourDocument> result = mongoTemplate.aggregate(untypedAggregation, YourDocument.class).getMappedResults();
+        // Execute the aggregation pipeline
+        List<YourDocument> result = mongoTemplate.aggregate(aggregation, YourDocument.class).getMappedResults();
 
         return result;
     }
