@@ -113,3 +113,16 @@ public class YourService {
     }
 }
 
+----------------
+   AggregationOperation addDays = Aggregation.project()
+                .andExpression("dateField2").plus(numberOfDays * 24 * 60 * 60 * 1000).as("dateField2PlusDays");
+
+        AggregationOperation compareDates = Aggregation.match(
+                Criteria.where("dateField1").gt("dateField2PlusDays")
+                        .and(otherField).is(otherValue)
+        );
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                addDays,
+                compareDates
+        );
