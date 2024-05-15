@@ -1,44 +1,7 @@
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.List;
-
-@Service
-public class YourService {
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    public List<YourDocument> findDocumentsWithCondition() {
-        // Aggregation pipeline to add 10 days to datefield2
-        Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.project()
-                        .andExpression("datefield2")
-                        .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
-                        .as("datefield2Plus10Days"),
-                Aggregation.match(
-                        Criteria.where("datefield1").gte("$datefield2Plus10Days")
-                )
-        );
-
-        // Execute the aggregation pipeline
-        List<YourDocument> result = mongoTemplate.aggregate(aggregation, YourDocument.class).getMappedResults();
-
-        return result;
-    }
-}
-
-
---------------------------
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -57,10 +20,9 @@ public class YourService {
                         .as("datefield2Plus10Days")
         );
 
-        // Convert the typed aggregation to untyped aggregation
-        Aggregation untypedAggregation = typedAggregation.toAggregation();
-
         // Untyped part of the aggregation pipeline to include additional field conditions
+        Aggregation untypedAggregation = typedAggregation.getAggregationOperationContext().getAggregation();
+
         untypedAggregation = untypedAggregation.withOptions(Aggregation.newAggregationOptions().allowDiskUse(true).build());
         untypedAggregation = untypedAggregation.match(
                 new Criteria().andOperator(
@@ -75,4 +37,3 @@ public class YourService {
         return result;
     }
 }
-
