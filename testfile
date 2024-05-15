@@ -3,8 +3,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -13,22 +11,14 @@ public class YourService {
     private MongoTemplate mongoTemplate;
 
     public List<YourDocument> findDocumentsWithCondition() {
-        // Get the current date
-        Calendar cal = Calendar.getInstance();
-        Date currentDate = cal.getTime();
-
-        // Add 10 days to the current date to get datefield2Plus10Days
-        cal.add(Calendar.DATE, 10);
-        Date datefield2Plus10Days = cal.getTime();
-
-        // Aggregation pipeline to add 10 days to datefield2 and include additional field conditions
+        // Aggregation pipeline to include additional field conditions
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.project()
                         .andExpression("datefield2")
                         .plus(1000 * 60 * 60 * 24 * 10) // Adding 10 days in milliseconds
                         .as("datefield2Plus10Days"),
                 Aggregation.match(
-                        Criteria.where("datefield1").gte(datefield2Plus10Days)
+                        Criteria.where("datefield1").gte("$datefield2Plus10Days")
                                 .and("anotherField").is("someValue")
                 )
         );
