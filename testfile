@@ -312,5 +312,5 @@ public interface YourRepository extends MongoRepository<YourEntity, String> {
     // Add more query methods as needed...
 
 }
-
+@Query("{$match: {$expr: {$eq: ['$field1', '$field2']}}}")
 
