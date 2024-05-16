@@ -142,3 +142,40 @@ public class YourService {
                 Criteria.where("dateField1").gte("dateField2 + 1000 * 60 * 60 * 24 * 11"),
                 Criteria.where("dateField1").lte(currentDateMinus5Days)
         );
+
+-------------------------------------------
+
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.Fields;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
+// Assuming you have a MongoTemplate instance named mongoTemplate
+
+// Calculate the date 10 days in the future
+LocalDate tenDaysInFuture = LocalDate.now().plusDays(10);
+Date tenDaysInFutureDate = Date.from(tenDaysInFuture.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+// Define the aggregation operation to project dateField2 plus 10 days
+AggregationOperation projectOperation = Aggregation.project()
+    .andExpression("dateField2").plus(tenDaysInFutureDate.getTime()).as("dateField2Plus10Days");
+
+// Define the match operation to filter documents where dateField1 is greater than or equal to dateField2 plus 10 days
+AggregationOperation matchOperation = Aggregation.match(Criteria.where("dateField1").gteExpression("dateField2Plus10Days"));
+
+// Define the aggregation pipeline
+TypedAggregation<YourDocumentType> aggregation = Aggregation.newAggregation(
+    projectOperation,
+    matchOperation
+);
+
+// Execute the aggregation
+List<YourResultType> result = mongoTemplate.aggregate(aggregation, YourResultType.class).getMappedResults();
+
