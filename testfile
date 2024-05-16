@@ -256,3 +256,46 @@ public class YourRepository {
     ])
     List<ComparisonResult> performDateComparison();
 
+
+--------------------
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import org.bson.Document;
+import java.util.ArrayList;
+import java.util.List;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Filters.*;
+
+public class MongoExample {
+
+    public static void main(String[] args) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
+            MongoCollection<Document> collection = mongoClient.getDatabase("your_database").getCollection("your_collection");
+
+            // Construct the aggregation pipeline with $match stage for filtering
+            List<Document> pipeline = new ArrayList<>();
+            pipeline.add(Aggregates.match(
+                and(
+                    gte("datefield1", "$datefield2"), // condition: datefield1 >= datefield2
+                    eq("other_field", "some_value")  // additional condition on another field
+                )
+            ));
+
+            // Execute the aggregation query
+            MongoCursor<Document> cursor = collection.aggregate(pipeline).iterator();
+
+            // Iterate through the results
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+                System.out.println(document.toJson());
+            }
+        }
+    }
+}
+
+
