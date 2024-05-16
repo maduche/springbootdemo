@@ -184,3 +184,25 @@ List<YourResultType> result = mongoTemplate.aggregate(aggregation, YourResultTyp
 @Aggregation("{ $project: { dateField1: 1, dateField2: 1, isDateField1GreaterThanDateField2Plus10: { $gt: ['$dateField1', { $add: ['$dateField2', 1000 * 60 * 60 * 24 * 10] }] } } }")
     List<ComparisonResult> compareDateField1ToDateField2Plus10();
 
+
+
+---------------------
+public Iterable<Document> compareFields(String field1, String field2) {
+        return collection.aggregate(Arrays.asList(
+            Aggregates.project(
+                Projections.fields(
+                    Projections.include(field1, field2)
+                )
+            ),
+            Aggregates.match(Filters.and(
+                Filters.exists(field1),
+                Filters.exists(field2)
+            )),
+            Aggregates.addFields(new Document(field2 + "_plus_10_days",
+                new Document("$add", Arrays.asList("$" + field2, 1000 * 60 * 60 * 24 * 10))
+            )),
+            Aggregates.addFields(new Document("comparisonResult",
+                new Document("$gte", Arrays.asList("$" + field1, "$" + field2 + "_plus_10_days"))
+            ))
+        ));
+    }
