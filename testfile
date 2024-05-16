@@ -187,7 +187,23 @@ List<YourResultType> result = mongoTemplate.aggregate(aggregation, YourResultTyp
 
 
 ---------------------
-public Iterable<Document> compareFields(String field1, String field2) {
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Sorts;
+import org.bson.Document;
+
+import java.util.Arrays;
+
+public class YourRepository {
+
+    private final MongoCollection<Document> collection;
+
+    public YourRepository(MongoDatabase database, String collectionName) {
+        this.collection = database.getCollection(collectionName);
+    }
+
+    public Iterable<Document> compareFields(String field1, String field2) {
         return collection.aggregate(Arrays.asList(
             Aggregates.project(
                 Projections.fields(
@@ -206,3 +222,5 @@ public Iterable<Document> compareFields(String field1, String field2) {
             ))
         ));
     }
+}
+
