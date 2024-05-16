@@ -306,7 +306,7 @@ import java.util.Date;
 
 public interface YourRepository extends MongoRepository<YourEntity, String> {
 
-    @Query("{$expr: { $gte: [ '$field1', '$field2' ] } }")
+    @Query("{'field1': { $gte: '$field2' } }")
     List<YourEntity> findByDateField1GreaterThanOrEqualField2();
 
     // Add more query methods as needed...
