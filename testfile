@@ -298,4 +298,19 @@ public class MongoExample {
     }
 }
 
+---------------
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import java.util.Date;
+
+public interface YourRepository extends MongoRepository<YourEntity, String> {
+
+    @Query("{$expr: { $gte: [ '$field1', '$field2' ] } }")
+    List<YourEntity> findByDateField1GreaterThanOrEqualField2();
+
+    // Add more query methods as needed...
+
+}
+
 
