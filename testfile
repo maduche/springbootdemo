@@ -224,3 +224,35 @@ public class YourRepository {
     }
 }
 
+-------------------
+@Aggregation([
+        {
+            $project: {
+                dateField1: 1,
+                dateField2: 1,
+                otherField1: 1,
+                otherField2: 1,
+                dateField2Plus10Days: { $add: ['$dateField2', 1000 * 60 * 60 * 24 * 10] }
+            }
+        },
+        {
+            $project: {
+                dateField1: 1,
+                dateField2Plus10Days: 1,
+                otherField1: 1,
+                otherField2: 1,
+                isDateField1GreaterThanDateField2Plus10: {
+                    $cond: {
+                        if: { $gt: ['$dateField1', '$dateField2Plus10Days'] },
+                        then: true,
+                        else: false
+                    }
+                },
+                isOtherField1EqualToSomeValue: {
+                    $eq: ['$otherField1', 'someValue'] // Example condition based on otherField1
+                }
+            }
+        }
+    ])
+    List<ComparisonResult> performDateComparison();
+
