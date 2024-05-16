@@ -190,21 +190,21 @@ List<YourResultType> result = mongoTemplate.aggregate(aggregation, YourResultTyp
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Sorts;
-import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
+import java.util.List;
 
+@Repository
 public class YourRepository {
 
-    private final MongoCollection<Document> collection;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
-    public YourRepository(MongoDatabase database, String collectionName) {
-        this.collection = database.getCollection(collectionName);
-    }
-
-    public Iterable<Document> compareFields(String field1, String field2) {
-        return collection.aggregate(Arrays.asList(
+    public List<Document> compareFields(String field1, String field2) {
+        return mongoTemplate.aggregate(Arrays.asList(
             Aggregates.project(
                 Projections.fields(
                     Projections.include(field1, field2)
@@ -220,7 +220,7 @@ public class YourRepository {
             Aggregates.addFields(new Document("comparisonResult",
                 new Document("$gte", Arrays.asList("$" + field1, "$" + field2 + "_plus_10_days"))
             ))
-        ));
+        ), "your_collection_name", Document.class).getMappedResults();
     }
 }
 
