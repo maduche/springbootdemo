@@ -316,3 +316,31 @@ public interface YourRepository extends MongoRepository<YourEntity, String> {
 
 @Query("{$match: {$expr: {$eq: ['$field1', '$field2']}}}")
 
+--------------------------------------------------
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByField1EqualsField2() {
+        // Use MongoTemplate to perform the comparison
+        List<YourEntity> result = mongoTemplate.find(
+            Query.query(Criteria.where("field1").is("field2")),
+            YourEntity.class
+        );
+        return result;
+    }
+}
+
