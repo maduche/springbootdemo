@@ -458,3 +458,34 @@ public class YourRepositoryImpl implements YourRepository {
     }
 }
 
+-------------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.bson.Document; // Import Document class
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByField1EqualsField2() {
+        // Construct the query using Document
+        Document queryDocument = new Document("field1", "field2");
+        Query query = new BasicQuery(queryDocument);
+        
+        // Execute the query
+        List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
+        return result;
+    }
+}
+
