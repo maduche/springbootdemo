@@ -489,3 +489,48 @@ public class YourRepositoryImpl implements YourRepository {
     }
 }
 
+------------------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import java.time.Instant;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByField1GreaterThanOrEqualField2Plus10Days() {
+        // Define the aggregation operations
+        AggregationOperation addTenDays = Aggregation.addFields().addFieldWithValue("field2Plus10Days",
+                Aggregation.dateFromParts()
+                        .year("$field2.year")
+                        .month("$field2.month")
+                        .dayOfMonth("$field2.dayOfMonth")
+                        .hour("$field2.hour")
+                        .minute("$field2.minute")
+                        .second("$field2.second")
+                        .millisecond("$field2.millisecond")
+                        .add(10).to("day"));
+
+        // Define the aggregation query
+        AggregationOperation matchCondition = Aggregation.match(
+                Criteria.where("field1").gte("$field2Plus10Days"));
+
+        // Execute the aggregation
+        Aggregation aggregation = Aggregation.newAggregation(addTenDays, matchCondition);
+        List<YourEntity> result = mongoTemplate.aggregate(aggregation, YourEntity.class).getMappedResults();
+        return result;
+    }
+}
+
