@@ -373,4 +373,45 @@ public class YourRepositoryImpl implements YourRepository {
     }
 }
 
+-------------------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByField1EqualsField2Plus10Days() {
+        // Construct a query to add 10 days to field2
+        Query query = new Query();
+        query.addCriteria(Criteria.where("field1").is("field2")
+            .and("field2").is(
+                new Document("$add", Arrays.asList(
+                    new Document("$dateFromString", new Document("dateString", "$field2")),
+                    ChronoUnit.DAYS.getDuration().multipliedBy(10)
+                ))
+            )
+        );
+        
+        // Execute the query
+        List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
+        return result;
+    }
+}
+
+
 
