@@ -414,4 +414,47 @@ public class YourRepositoryImpl implements YourRepository {
 }
 
 
+-------------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByField1GreaterThanField2Plus10Days() {
+        // Calculate the date 10 days from now
+        Instant tenDaysFromNow = Instant.now().plus(10, ChronoUnit.DAYS);
+        
+        // Create the aggregation pipeline to add 10 days to field2 and compare it with field1
+        Aggregation aggregation = Aggregation.newAggregation(
+            Aggregation.project()
+                .andExpression("field2").dateFromString("%Y-%m-%d").as("field2Date")
+                .andExpression("$$NOW").as("now")
+                .andExpression("$$now + 864000000").as("tenDaysFromNow"), // 864000000 milliseconds = 10 days
+            Aggregation.match(
+                Criteria.where("field1").gt("field2Date").and("field2Date").lte("tenDaysFromNow")
+            )
+        );
+
+        // Execute the aggregation
+        List<YourEntity> result = mongoTemplate.aggregate(aggregation, YourEntity.class).getMappedResults();
+        return result;
+    }
+}
 
