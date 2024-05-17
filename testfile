@@ -534,3 +534,50 @@ public class YourRepositoryImpl implements YourRepository {
     }
 }
 
+
+----------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
+import org.springframework.data.mongodb.core.aggregation.DateOperators.*;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByField1GreaterThanOrEqualField2Plus10Days() {
+        // Define the aggregation operation to add 10 days to field2
+        AggregationOperation addTenDays = Aggregation.addFields()
+                .addFieldWithValue("field2Plus10Days",
+                        Add.valueOf(DateOperators.dateFromParts()
+                                .yearOf("field2")
+                                .monthOf("field2")
+                                .dayOfMonth("field2")
+                                .hourOf("field2")
+                                .minuteOf("field2")
+                                .secondOf("field2")
+                                .millisecondOf("field2")
+                                .toMilliseconds(), 10 * 24 * 60 * 60 * 1000)); // 10 days in milliseconds
+
+        // Define the aggregation operation to match documents where field1 >= field2Plus10Days
+        AggregationOperation matchCondition = Aggregation.match(Criteria.where("field1").gte("field2Plus10Days"));
+
+        // Execute the aggregation
+        Aggregation aggregation = Aggregation.newAggregation(addTenDays, matchCondition);
+        List<YourEntity> result = mongoTemplate.aggregate(aggregation, YourEntity.class).getMappedResults();
+        return result;
+    }
+}
+
+
