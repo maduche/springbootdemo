@@ -978,3 +978,39 @@ public class YourRepositoryImpl implements YourRepository {
     }
 }
 
+-------------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByDatefieldMinus10Days() {
+        Instant tenDaysAgo = Instant.now().minus(10, ChronoUnit.DAYS);
+        Date tenDaysAgoDate = Date.from(tenDaysAgo);
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.project()
+                        .andExpression("{$subtract: ['$datefield', ?0]}", tenDaysAgoDate)
+                        .as("datefieldMinus10Days"),
+                Aggregation.match(Criteria.where("datefieldMinus10Days").lte(new Date()))
+        );
+
+        AggregationResults<YourEntity> results = mongoTemplate.aggregate(aggregation, YourEntity.class);
+        return results.getMappedResults();
+    }
+}
+
