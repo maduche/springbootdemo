@@ -1050,4 +1050,15 @@ public class YourRepositoryImpl implements YourRepositoryCustom {
     }
 }
 
+------------------------
+Instant tenDaysAgo = Instant.now().minus(10, ChronoUnit.DAYS);
+Date tenDaysAgoDate = Date.from(tenDaysAgo);
+
+Aggregation aggregation = Aggregation.newAggregation(
+    Aggregation.project()
+            .and("datefield").minus(tenDaysAgoDate).as("datefieldMinus10Days"),
+    Aggregation.match(Criteria.where("datefieldMinus10Days").lte(new Date()))
+);
+
+
 
