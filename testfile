@@ -1479,6 +1479,25 @@ Query query = new Query().addCriteria(dateCriteria).addCriteria(dateComparisonCr
 List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
 
 
+---------------------------
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+// Calculate the date 10 days from field2
+Criteria dateCriteria = Criteria.where("field2").exists(true);
+Criteria dateComparisonCriteria = Criteria.where("$expr")
+    .gte(new Date(System.currentTimeMillis() + 10 * 24 * 60 * 60 * 1000), "$field1");
+
+// Create a Query object with the Criteria
+Query query = new Query().addCriteria(dateCriteria).addCriteria(dateComparisonCriteria);
+
+// Execute the query using Spring Data MongoDB repository
+List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
+
+
+
 
 
 
