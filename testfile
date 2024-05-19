@@ -1387,6 +1387,27 @@ db.your_collection_name.aggregate([
 ])
 
 
+----------------------
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+// Create a Criteria object with the expressions
+Criteria criteria = new Criteria().andOperator(
+    Criteria.where("field1").gteExpression("'$field2' + 864000000"), // Add 10 days to field2
+    Criteria.where("field1").lteExpression("new Date() - 864000000") // Subtract 10 days from current date
+);
+
+// Create a Query object with the Criteria
+Query query = new Query(criteria);
+
+// Execute the query using Spring Data MongoDB repository
+List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
+
+
+
 
 
 
