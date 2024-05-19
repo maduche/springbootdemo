@@ -1406,6 +1406,34 @@ Query query = new Query(criteria);
 // Execute the query using Spring Data MongoDB repository
 List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
 
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+// Calculate the date 10 days from now
+Instant tenDaysFromNow = Instant.now().plus(10, ChronoUnit.DAYS);
+Date tenDaysFromNowDate = Date.from(tenDaysFromNow);
+
+// Create a Criteria object with the $expr operator
+Criteria criteria = Criteria.where("$expr").gt(
+    // Expression for field1
+    "$field1",
+    // Expression for field2 + 10 days
+    Criteria.where("$add").arrayOperators(
+        Criteria.arrayValueOf("$field2"),
+        Criteria.arrayValueOf(86400000 * 10) // 10 days in milliseconds
+    )
+);
+
+// Create a Query object with the Criteria
+Query query = new Query(criteria);
+
+// Execute the query using Spring Data MongoDB repository
+List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
+
+
 
 
 
