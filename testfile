@@ -1059,6 +1059,44 @@ Aggregation aggregation = Aggregation.newAggregation(
             .and("datefield").minus(tenDaysAgoDate).as("datefieldMinus10Days"),
     Aggregation.match(Criteria.where("datefieldMinus10Days").lte(new Date()))
 );
+--------------------------import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public class YourRepositoryImpl implements YourRepositoryCustom {
+
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public YourRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public List<YourEntity> findByFieldConditions() {
+        Instant tenDaysAgo = Instant.now().minus(10, ChronoUnit.DAYS);
+        Date tenDaysAgoDate = Date.from(tenDaysAgo);
+
+        Aggregation aggregation = Aggregation.newAggregation(
+            Aggregation.addFields()
+                .addField("field2Plus10Days").withValueOf("{$add: ['$field2', 10 * 24 * 60 * 60 * 1000]}")
+                .addField("field1Minus10Days").withValueOf("{$subtract: ['$field1', 10 * 24 * 60 * 60 * 1000]}"),
+            Aggregation.match(Criteria.where("field1").gte("field2Plus10Days")),
+            Aggregation.match(Criteria.where("field1").lte("field1Minus10Days"))
+        );
+
+        AggregationResults<YourEntity> results = mongoTemplate.aggregate(aggregation, YourEntity.class);
+        return results.getMappedResults();
+    }
+}
 
 
 
