@@ -1380,5 +1380,13 @@ db.your_collection_name.aggregate([
 db.your_collection_name.aggregate([...]).pretty()
 
 
+------------------------------
+db.your_collection_name.aggregate([
+   { $project: { field2Plus10Days: { $add: ["$field2", 864000000] }, field1Minus10Days: { $subtract: ["$field1", 864000000] } } },
+   { $match: { field1: { $gte: "$field2Plus10Days", $lte: "$field1Minus10Days" } } }
+])
+
+
+
 
 
