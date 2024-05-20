@@ -1497,6 +1497,30 @@ Query query = new Query().addCriteria(dateCriteria).addCriteria(dateComparisonCr
 List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
 
 
+------------------------
+@Service
+public class MyService {
+
+    private final MongoTemplate mongoTemplate;
+
+    public MyService(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    public List<MyDocument> findDocumentsByDateComparison() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("$expr").is(
+            new Document("$gte", Arrays.asList(
+                new Document("$dateToString", new Document("format", "%Y-%m-%d").append("date", "$dateField1")),
+                new Document("$dateToString", new Document("format", "%Y-%m-%d").append("date", new Document("$add", Arrays.asList("$dateField2", 1000L * 60 * 60 * 24 * 11))))
+            ))
+        ));
+
+        return mongoTemplate.find(query, MyDocument.class);
+    }
+}
+
+
 
 
 
