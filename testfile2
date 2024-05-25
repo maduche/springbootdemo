@@ -103,5 +103,16 @@ public class MyQuartzJobTest {
         verify(jobLocator, times(1)).getJob("myJob");
         verify(jobLauncher, times(0)).run(any(Job.class), any(JobParameters.class));
     }
+
+ @Bean
+    public ListItemReader<InputType> reader() {
+        List<InputType> items = Arrays.asList(
+                new InputType("value1", "value2"),
+                new InputType("value3", "value4"),
+                new InputType("value5", "value6")
+        );
+        return new ListItemReader<>(items);
+    }
+
 }
 
