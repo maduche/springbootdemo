@@ -1,0 +1,29 @@
+package com.example.scheduler;
+
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SampleJobService {
+
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job sampleBatchJob;
+
+    @SchedulerLock(name = "SampleJob_scheduledTask", lockAtMostFor = "10m", lockAtLeastFor = "1m")
+    public void executeJob() {
+        try {
+            jobLauncher.run(sampleBatchJob, new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis())
+                .toJobParameters());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
