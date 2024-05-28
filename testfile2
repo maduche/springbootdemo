@@ -116,3 +116,21 @@ public class MyQuartzJobTest {
 
 }
 
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyQuartzJob implements Job {
+
+    @Override
+    @SchedulerLock(name = "MyQuartzJob_scheduledTask", lockAtMostFor = "10m", lockAtLeastFor = "5m")
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        // Job logic here
+        System.out.println("Executing job at " + System.currentTimeMillis());
+    }
+}
+
+
