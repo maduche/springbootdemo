@@ -94,3 +94,16 @@ public class QuartzConfigTest {
 
     @Query("{ 'email': { $ne: null }, 'status': 'active' }")
   @Query("{ 'contacts': { $elemMatch: { 'phoneNumber': null } } }")
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface UserRepository extends MongoRepository<User, String> {
+
+    @Query("{ 'contacts': { $elemMatch: { 'phoneNumber': null } }, 'status': :#{#status} }")
+    List<User> findUsersWithContactsHavingNullPhoneNumberAndStatus(@Param("status") String status);
+}
+
