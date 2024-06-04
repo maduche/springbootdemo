@@ -93,3 +93,4 @@ public class QuartzConfigTest {
 
 
     @Query("{ 'email': { $ne: null }, 'status': 'active' }")
+  @Query("{ 'contacts': { $elemMatch: { 'phoneNumber': null } } }")
