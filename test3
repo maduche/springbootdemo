@@ -90,3 +90,6 @@ public class QuartzConfigTest {
         assertEquals(jobDetail, trigger.getJobKey());
     }
 }
+
+
+    @Query("{ 'email': { $ne: null }, 'status': 'active' }")
