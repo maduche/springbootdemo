@@ -12,3 +12,4 @@ We didn’t find a matching account number, so the product code and company numb
 This caused POPS to throw an error.
 We didn’t check other customers for valid details.
 We may need a code change to fix this.
+On the facade, we missed checking the product code and company number along with the search party response. As a result, it skipped other customers.
