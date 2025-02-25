@@ -1,18 +1,1 @@
-Search Party Call – This identified multiple customers (true).
-ECPR - Customer Profile Call – We retrieved the profile for the first customer and received a response. However, we could not find a matching account number in the ECPR customer profile, resulting in null values for the product code and company number. Consequently, POPS threw an error.
-Upon reviewing the process, I noticed that we did not check all identified customers to determine if another customer had a valid product code and company number. We may need to modify the code to ensure all potential matches are checked before throwing an error.
-
-Search Party Call – It identified multiple customers (true).
-ECPR - Customer Profile Call – We fetched the first customer's profile but couldn’t find a matching account number. As a result, the product code and company number were null, causing POPS to throw an error.
-We missed checking other customers for a valid product code and company number. We may need a code change to fix this.
-
-We called Search Party, and it found multiple customers.
-We called ECPR - Customer Profile for the first customer.
-We didn’t find a matching account number, so the product code and company number were null.
-This caused POPS to throw an error.
-We didn’t check other customers for valid details.
-We may need a code change to fix this.
-On the facade, we missed checking the product code and company number along with the search party response. As a result, it skipped other customers.
-
-We may need a code change to ensure all potential matches are checked before throwing an error.
-If none of the identified customers have a product code and company number, this could be a data issue in ECPR.
+ghfg
