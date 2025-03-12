@@ -1,1 +1,19 @@
-ghfg
+db.products.updateMany(
+  { category: "electronics" },  // Condition
+  { 
+    $set: { 
+      "items": {
+        $map: {
+          input: "$items",
+          as: "item",
+          in: { 
+            $mergeObjects: [ 
+              "$$item", 
+              { "order": { $add: ["$$item.order", 1] } } 
+            ] 
+          }
+        }
+      }
+    }
+  }
+);
