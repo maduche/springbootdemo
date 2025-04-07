@@ -1,41 +1,24 @@
-db.products.updateMany(
-  { category: "electronics" },  // Condition
-  { 
-    $set: { 
-      "items": {
-        $map: {
-          input: "$items",
-          as: "item",
-          in: { 
-            $mergeObjects: [ 
-              "$$item", 
-              { "order": { $add: ["$$item.order", 1] } } 
-            ] 
-          }
-        }
-      }
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import java.util.Properties;
+
+public class KafkaPublisher {
+
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092"); // Kafka broker
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+
+        // Message to send
+        ProducerRecord<String, String> record = new ProducerRecord<>("my-topic", "Hello from Java");
+
+        // Send it
+        producer.send(record);
+        producer.close();
+
+        System.out.println("✅ Message sent!");
     }
-  }
-);
-
-// 1. Define the collection
-const collection = db.getCollection('products');  // Replace 'products' with your collection name
-
-// 2. Fetch the documents sorted by _id (or any field you prefer)
-const products = collection.find({ category: "electronics" })  // Modify the condition if needed
-                            .sort({ _id: 1 })  // Sorting by _id (or use another field for sorting)
-                            .toArray();  // Convert the result into an array
-
-// 3. Initialize the order value
-let orderValue = 1;
-
-// 4. Iterate over the sorted documents and update the order field sequentially
-products.forEach(function(product) {
-  collection.updateOne(
-    { _id: product._id },  // Match by _id
-    { $set: { "product.order": orderValue } }  // Set the sequential order value
-  );
-  orderValue++;  // Increment the order value for the next document
-});
-
-print("Order fields updated successfully!");
+}
