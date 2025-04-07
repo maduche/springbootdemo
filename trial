@@ -1,24 +1,34 @@
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import java.util.Properties;
 
 public class KafkaPublisher {
 
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092"); // Kafka broker
+        props.put("bootstrap.servers", "localhost:9092");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
 
-        // Message to send
-        ProducerRecord<String, String> record = new ProducerRecord<>("my-topic", "Hello from Java");
+        ProducerRecord<String, String> record = new ProducerRecord<>("my-topic", "Hello from Java with metadata!");
 
-        // Send it
-        producer.send(record);
+        // Send with a callback to print metadata
+        producer.send(record, (RecordMetadata metadata, Exception exception) -> {
+            if (exception == null) {
+                System.out.println("✅ Message sent successfully!");
+                System.out.println("📦 Topic: " + metadata.topic());
+                System.out.println("📌 Partition: " + metadata.partition());
+                System.out.println("🔢 Offset: " + metadata.offset());
+            } else {
+                System.err.println("❌ Error sending message:");
+                exception.printStackTrace();
+            }
+        });
+
+        producer.flush(); // Ensure the message is sent before closing
         producer.close();
-
-        System.out.println("✅ Message sent!");
     }
 }
