@@ -33,4 +33,5 @@ public class KafkaPublisher {
     }
 }
 
+The respective build has been deployed to all PCF non-prod environments."
 "We merged the 04/10 buildpack into the 05/03 branch. Since the CD repo branch for 07/02 is not available, XXXXX suggested skipping the 07/12 PR merge. The buildpack has been deployed to all environments, and screenshots are attached in the subtask."
