@@ -32,4 +32,4 @@ public class KafkaPublisher {
         producer.close();
     }
 }
-
+"I initially deployed all 4 MMS components across the 4 data centers. Three were successful, but the payment-order deployment failed in the LEW data center. I retriggered the pipeline as you shared, and since the defined order requires deployment to all 4 data centers, I attempted again — but the deployment failed once more."
