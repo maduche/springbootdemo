@@ -32,12 +32,10 @@ public class KafkaPublisher {
         producer.close();
     }
 }
-----
-We tried FDP load testing using Postman, but it did not run properly and showed certificate issues. However, it worked fine with a small number of records.
-Could you please continue with FDP batch load testing?
----
-We tried FDP load testing using Postman, but it did not run properly and showed certificate issues. However, it worked fine with a small number of records.
-Could you please continue with FDP batch load testing?
-"I initially deployed all 4 MMS components across the 4 data centers. Three were successful, but the payment-order deployment failed in the LEW data center. I retriggered the pipeline as you shared, and since the defined order requires deployment to all 4 data centers, I attempted again — but the deployment failed once more."
-We tried FDP load testing using Postman. It did not run properly for some reason. However, it worked fine with a small number of records.
-Could you please continue with FDP batch load testing?
+I have tested both the POPS OCP and POPS PCF environments, and I can confirm that both are pointing to the Apigee endpoint.
+
+Could you please verify if you have received any requests for the following routing number?
+
+Routing Number: [Insert Routing Number Here]
+
+Let me know if you need any additional information.
