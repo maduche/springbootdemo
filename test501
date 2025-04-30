@@ -58,3 +58,5 @@ Tools:
 
 Incident management platforms (e.g., PagerDuty, ServiceNow).
 Video conferencing and collaboration tools for real-time communication.
+
+"Before the CACS service was introduced, we did not implement displaying the balance on the UI. I'm not sure if it was implemented when the CACS service was enabled — we need to check the code to confirm."
