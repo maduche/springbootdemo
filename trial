@@ -1,35 +1,71 @@
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
-import java.util.Properties;
+import java.io.IOException;
+import java.nio.file.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class KafkaPublisher {
+public class CollectAndDeleteSuccessFiles {
 
     public static void main(String[] args) {
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        Path folderPath = Paths.get("C:/example/folder"); // Change this
+        int daysOld = 7;
 
-        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+        // Step 1: Collect matching files
+        List<Path> matchingFiles = collectOldSuccessFiles(folderPath, daysOld);
 
-        ProducerRecord<String, String> record = new ProducerRecord<>("my-topic", "Hello from Java with metadata!");
+        // Step 2: Delete and get success list
+        List<Path> deletedFiles = deleteFiles(matchingFiles);
 
-        // Send with a callback to print metadata
-        producer.send(record, (RecordMetadata metadata, Exception exception) -> {
-            if (exception == null) {
-                System.out.println("✅ Message sent successfully!");
-                System.out.println("📦 Topic: " + metadata.topic());
-                System.out.println("📌 Partition: " + metadata.partition());
-                System.out.println("🔢 Offset: " + metadata.offset());
-            } else {
-                System.err.println("❌ Error sending message:");
-                exception.printStackTrace();
+        System.out.println("\n✅ Successfully deleted files:");
+        deletedFiles.forEach(path -> System.out.println(" - " + path.getFileName()));
+    }
+
+    // Step 1: Collect files older than N days and ending with "success"
+    public static List<Path> collectOldSuccessFiles(Path folderPath, int daysOld) {
+        if (!Files.exists(folderPath) || !Files.isDirectory(folderPath)) {
+            System.out.println("Invalid folder: " + folderPath.toAbsolutePath());
+            return List.of();
+        }
+
+        Instant cutoff = Instant.now().minus(daysOld, ChronoUnit.DAYS);
+
+        try (Stream<Path> files = Files.list(folderPath)) {
+            return files
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().endsWith("success"))
+                    .filter(path -> isOlderThan(path, cutoff))
+                    .collect(Collectors.toList());
+
+        } catch (IOException e) {
+            System.out.println("Error reading folder: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    // Step 2: Delete files and return only those successfully deleted
+    public static List<Path> deleteFiles(List<Path> files) {
+        List<Path> deleted = new ArrayList<>();
+        for (Path path : files) {
+            try {
+                Files.delete(path);
+                deleted.add(path);
+            } catch (IOException e) {
+                System.out.println("❌ Failed to delete: " + path.getFileName() + " - " + e.getMessage());
             }
-        });
+        }
+        return deleted;
+    }
 
-        producer.flush(); // Ensure the message is sent before closing
-        producer.close();
+    // Helper: Check if file is older than the cutoff
+    private static boolean isOlderThan(Path path, Instant cutoff) {
+        try {
+            return Files.getLastModifiedTime(path).toInstant().isBefore(cutoff);
+        } catch (IOException e) {
+            System.out.println("⚠️ Could not read time for: " + path.getFileName());
+            return false;
+        }
     }
 }
-
