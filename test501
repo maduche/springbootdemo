@@ -60,3 +60,6 @@ Incident management platforms (e.g., PagerDuty, ServiceNow).
 Video conferencing and collaboration tools for real-time communication.
 
 We found that for invalid 'Pay Amount' transactions, DCBS returns an 'Auth Response Code' and 'Auth Response Description'. Can you confirm if this format is always used for invalid transactions? If yes, I’ll use these fields for POPS DCBS invalid 'Pay Amount' transaction handling."
+
+"We found that for invalid 'Pay Amount' transactions, DCBS returns an 'Auth Response Code: [dynamic_value]' and 'Auth Response Description: [dynamic_value]'. Can you confirm if this format is always used for invalid transactions? If yes, I’ll use these fields for handling invalid 'Pay Amount' transactions in POPS DCBS."
+
