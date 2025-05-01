@@ -32,10 +32,4 @@ public class KafkaPublisher {
         producer.close();
     }
 }
-I have tested both the POPS OCP and POPS PCF environments, and I can confirm that both are pointing to the Apigee endpoint.
 
-Could you please verify if you have received any requests for the following routing number?
-
-Routing Number: [Insert Routing Number Here]
-
-Let me know if you need any additional information.
