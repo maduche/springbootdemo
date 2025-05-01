@@ -59,4 +59,4 @@ Tools:
 Incident management platforms (e.g., PagerDuty, ServiceNow).
 Video conferencing and collaboration tools for real-time communication.
 
-"Before the CACS service was introduced, we did not implement displaying the balance on the UI. I'm not sure if it was implemented when the CACS service was enabled — we need to check the code to confirm."
+We found that for invalid 'Pay Amount' transactions, DCBS returns an 'Auth Response Code' and 'Auth Response Description'. Can you confirm if this format is always used for invalid transactions? If yes, I’ll use these fields for POPS DCBS invalid 'Pay Amount' transaction handling."
