@@ -114,3 +114,33 @@ Instant cutoff = LocalDate.now()
                 .toInstant();
         Files.setLastModifiedTime(tempFile, FileTime.from(tenDaysAgo));
 
+-----------
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import java.nio.file.*;
+import java.nio.file.attribute.FileTime;
+import java.time.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class FileCleanerTest {
+
+    @Test
+    void testIsOlderThanNDays_Mocked() throws Exception {
+        Path mockPath = mock(Path.class);
+
+        // 10 days ago
+        Instant tenDaysAgo = LocalDate.now().minusDays(10)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant();
+        FileTime fileTime = FileTime.from(tenDaysAgo);
+
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.getLastModifiedTime(mockPath)).thenReturn(fileTime);
+
+            boolean result = FileCleaner.isOlderThanNDays(mockPath, 7);
+            assertTrue(result, "Expected file to be older than 7 days");
+        }
+    }
+}
+
