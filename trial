@@ -93,4 +93,18 @@ Instant cutoff = LocalDate.now()
         when(Files.list(mockedFolderPath)).thenReturn(Stream.of(mockedFile));
 
         List<Path> collectedFiles = fileManager.collectOldSuccessFiles(mockedFolderPath, 7);
+-------------------
+ Path mockPath = mock(Path.class);
+        BasicFileAttributes mockAttrs = mock(BasicFileAttributes.class);
 
+        Instant fileInstant = LocalDate.now()
+                .atStartOfDay(ZoneId.systemDefault()).toInstant();
+        when(mockAttrs.lastModifiedTime()).thenReturn(FileTime.from(fileInstant));
+
+        try (var mocked = mockStatic(Files.class)) {
+            mocked.when(() -> Files.readAttributes(mockPath, BasicFileAttributes.class)).thenReturn(mockAttrs);
+
+            FileCleaner cleaner = new FileCleaner();
+            LocalDate cutoff = LocalDate.now().minusDays(7);
+            assertFalse(cleaner.isOlderThan(mockPath, cutoff));
+        }
