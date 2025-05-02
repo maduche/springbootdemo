@@ -144,3 +144,11 @@ class FileCleanerTest {
     }
 }
 
+---------------
+try (MockedStatic<Files> filesMock = mockStatic(Files.class)) {
+    filesMock.when(() -> Files.getLastModifiedTime(any(Path.class)))
+             .thenReturn(FileTime.from(Instant.now().minus(Duration.ofDays(10))));
+             
+    // Now when your code calls Files.getLastModifiedTime(path), it returns mocked time.
+}
+
