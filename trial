@@ -83,3 +83,14 @@ Instant cutoff = LocalDate.now()
                 .minusDays(days)
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant();
+
+// Set up mock file behavior
+        Instant cutoff = Instant.now().minus(7, ChronoUnit.DAYS);
+        when(mockedFile.getFileName()).thenReturn(Path.of("file_success"));
+        when(Files.getLastModifiedTime(mockedFile).toInstant()).thenReturn(cutoff.minus(1, ChronoUnit.DAYS));
+
+        // Assuming folderPath is mocked properly and returns mocked file
+        when(Files.list(mockedFolderPath)).thenReturn(Stream.of(mockedFile));
+
+        List<Path> collectedFiles = fileManager.collectOldSuccessFiles(mockedFolderPath, 7);
+
