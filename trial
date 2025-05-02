@@ -78,3 +78,8 @@ List<String> pathStrings = (List<String>) executionContext.get("filePaths");
 List<Path> paths = pathStrings.stream()
                               .map(Paths::get)
                               .collect(Collectors.toList());
+
+Instant cutoff = LocalDate.now()
+                .minusDays(days)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant();
