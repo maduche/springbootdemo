@@ -108,3 +108,9 @@ Instant cutoff = LocalDate.now()
             LocalDate cutoff = LocalDate.now().minusDays(7);
             assertFalse(cleaner.isOlderThan(mockPath, cutoff));
         }
+
+ Instant tenDaysAgo = LocalDate.now().minusDays(10)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant();
+        Files.setLastModifiedTime(tempFile, FileTime.from(tenDaysAgo));
+
