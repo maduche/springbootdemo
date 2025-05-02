@@ -69,3 +69,8 @@ public class CollectAndDeleteSuccessFiles {
         }
     }
 }
+
+List<Path> paths = List.of(Paths.get("/tmp/file1"), Paths.get("/tmp/file2"));
+List<String> pathStrings = paths.stream()
+                                .map(Path::toString)
+                                .collect(Collectors.toList());
