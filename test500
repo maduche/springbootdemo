@@ -73,4 +73,38 @@ auth response description – literal text (ignores case)
 
 .+ means "one or more of any characters" — this gets the full message like Do not honor
 
+------------------
+import java.util.regex.*;
+
+public class AuthResponseExtractor {
+    public static void main(String[] args) {
+        String input = "auth Response Code :   05 AND auth response description:  Do not honor";
+
+        // Pattern for Auth Code
+        Pattern codePattern = Pattern.compile(
+            "auth response code\\s*[:]?\\s*(\\S+)",
+            Pattern.CASE_INSENSITIVE);
+        Matcher codeMatcher = codePattern.matcher(input);
+
+        // Pattern for Auth Description
+        Pattern descPattern = Pattern.compile(
+            "auth response description\\s*[:]?\\s*(.+)",
+            Pattern.CASE_INSENSITIVE);
+        Matcher descMatcher = descPattern.matcher(input);
+
+        // Extract if present
+        if (codeMatcher.find()) {
+            System.out.println("Code: " + codeMatcher.group(1));
+        } else {
+            System.out.println("Code not found.");
+        }
+
+        if (descMatcher.find()) {
+            System.out.println("Description: " + descMatcher.group(1).trim());
+        } else {
+            System.out.println("Description not found.");
+        }
+    }
+}
+
 
