@@ -106,5 +106,22 @@ public class AuthResponseExtractor {
         }
     }
 }
+Explanation
+"auth response code\\s*[:]?\\s*(\\S+)"
+
+auth response code	Matches the literal text (case-insensitive)
+\\s*	Matches zero or more spaces after the text
+[:]?	Matches an optional colon :
+\\s*	Matches zero or more spaces after the colon
+(\\S+)	Captures one or more non-space characters (this is the code, like 05)
+
+
+"auth response description\\s*[:]?\\s*(.+)"
+
+auth response description	Matches the literal text (case-insensitive)
+\\s*	Matches zero or more spaces after the text
+[:]?	Matches an optional colon :
+\\s*	Matches zero or more spaces after the colon
+(.+)	Captures one or more of any character — this is the description
 
 
