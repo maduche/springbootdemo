@@ -1,3 +1,11 @@
+-------------
+The first part (auth response code\\s*[:]?\\s*(\\S+)) captures the Auth Code.
+
+The second part (auth response description\\s*[:]?\\s*(.+)) captures the Auth Description.
+
+The .*? in between allows the text between the code and description to be ignored (it’s non-greedy).
+-----------------
+
 import java.util.regex.*;
 
 public class AuthResponseExtractor {
