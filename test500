@@ -1,66 +1,22 @@
-Summary
+import java.util.regex.*;
 
-Over the past year, I have strengthened my proficiency design, development and testing on  Check ByPhone ACH, Overdraft collection payments ,
-On US CBP and address doctor and quartz batch jobs, notification of change and return payments processing. I also gained subject matter expertise on over draft, return 
-payment processing and notification changes ensuring smoother development process. Also ,I have focused on preventing production issues by being proactive
- in testing, improving code quality, and collaborating with QA and Operations teams.
+public class AuthResponseExtractor {
+    public static void main(String[] args) {
+        String input = "auth Response Code :   05 AND auth response description:  Do not honor";
 
-1. Technical Expertise
-Over the past year, I have focused on my Full Stack development skills, particularly with Java ,Spring Boot, Mongo DB, Angular.
-I have successfully contributed to and led critical requirement such as check by phone ACH, Overdraft Collection Payments,
-On US CBP and Address Doctor, and Quartz Batch Jobs. These projects allowed me to deepen my understanding of complex system architecture 
-and refine my problem-solving abilities.
+        // Regex pattern with optional spaces and case-insensitive flag
+        Pattern pattern = Pattern.compile(
+            "auth response code\\s*[:\\s]*([\\S]+).*?auth response description\\s*[:\\s]*(.*)",
+            Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(input);
 
-One technical area where I excelled was in automating batch jobs using Quartz, ensuring timely and efficient processing. 
-
-2. Leadership and Mentorship:
-I consistently took on a mentoring role within the team guiding them through best coding practices, code reviews, and helping them navigate through complex tasks.
-I’m proud to have contributed to creating a culture of continuous learning within the team.
-
-3. Communication and Stakeholder Engagement
-My communication with both technical and non-technical stakeholders has improved significantly. 
-I regularly engage with product managers, designers, leads and teams to ensure that technical feasibility aligns with business objectives.
-I recognize that i had to enhance my communication skills by Active Listening, Written Communication, Tailoring communication to the Audience etc:
- 
- 
-4. Impact and Initiative:
-In terms of impact, I contributed quartz batch application structure which adds n number of jobs(ACH Return Job, Payment Reminder Job, Payment In Process Job, NOC JOB) to configure for future. All jobs are configured at one place and 
-Code maintainability/readability is simple
-
- 
-5. Adaptability and Growth
-This year, I focused on learning more about cloud computing, specifically with Azure certification certification. I also kept up with industry trends by attending online conferences and workshops
-, which helped me bring new ideas to the team, such as experimenting with serverless architectures.
-
-6.Goals for Next Year
-In the next year, I plan to dedicate more time to learning on front end ( React, Angular ) and cloud and to further enhance my skill set.
-
-
-Overall, I am proud of the progress I’ve made in my technical and leadership abilities over the last year.
-My contributions have positively impacted the team’s efficiency and product quality. Moving forward, 
-I will continue to build on my strengths while addressing areas for growth to become a more well-rounded and effective engineer.
-
-
-
-Risk
-
-I have focused on preventing production issues by being proactive in testing, improving code quality, and collaborating with QA and Operations teams. 
-Through continuous learning and process improvements, I’ve helped ensure that our systems remain stable and reliable in production, resulting in fewer incidents
- and higher customer satisfaction. Moving forward, I will continue to build on these efforts to maintain production excellence.
- 
-Area of focus
- 
-I also worked extensively on front end development, which is an area I am actively improving. While I have gained proficiency in front end tools and frameworks,
-I recognize that I need to enhance my skills further, especially in developing user-friendly interfaces that align well with back end processes.
-I’ve also taken proactive steps to address technical debt on schedule series on digital and POPS UI, especially in older parts of the codebase, 
-improving overall performance and reducing maintenance costs. However, I recognize that there’s still work to be done in this area, 
-and I aim to continue addressing technical debt while balancing new feature development.One area where I would like to improve is proactively addressing technical debt. While I have worked on features with clear business priorities,
-I acknowledge that some parts of the codebase still require refactoring to ensure long-term maintainability.
-
-
-
-
-
-
-
-
+        if (matcher.find()) {
+            String code = matcher.group(1);
+            String description = matcher.group(2).trim();
+            System.out.println("Code: " + code);
+            System.out.println("Description: " + description);
+        } else {
+            System.out.println("No match found.");
+        }
+    }
+}
