@@ -20,3 +20,29 @@ public class AuthResponseExtractor {
         }
     }
 }
+
+----------------
+
+import java.util.regex.*;
+
+public class AuthResponseExtractor {
+    public static void main(String[] args) {
+        String input = "auth Response Code :   05 AND auth response description:  Do not honor";
+
+        // Improved regex: handles optional colon and spaces more precisely
+        Pattern pattern = Pattern.compile(
+            "auth response code\\s*[:]?\\s*(\\S+).*?auth response description\\s*[:]?\\s*(.+)",
+            Pattern.CASE_INSENSITIVE);
+        
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            String code = matcher.group(1);
+            String description = matcher.group(2).trim();
+            System.out.println("Code: " + code);
+            System.out.println("Description: " + description);
+        } else {
+            System.out.println("No match found.");
+        }
+    }
+}
