@@ -46,3 +46,31 @@ public class AuthResponseExtractor {
         }
     }
 }
+
+-----------------
+Step-by-Step Explanation:
+Part 1: auth response code\\s*[:]?\\s*(\\S+)
+auth response code – literal text (ignores case)
+
+\\s* – match zero or more spaces (before the colon)
+
+[:]? – match an optional colon :
+
+\\s* – match zero or more spaces (after the colon)
+
+(\\S+) – capture the code:
+
+\\S+ means "one or more non-space characters" (e.g., 05, 00, etc.)
+
+Part 2: .*?auth response description\\s*[:]?\\s*(.+)
+.*? – match anything between the code and the description (non-greedy)
+
+auth response description – literal text (ignores case)
+
+\\s*[:]?\\s* – same logic as above, allows optional colon and spaces
+
+(.+) – capture the description:
+
+.+ means "one or more of any characters" — this gets the full message like Do not honor
+
+
