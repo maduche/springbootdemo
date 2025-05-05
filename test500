@@ -131,5 +131,49 @@ auth response description	Matches the literal text (case-insensitive)
 [:]?	Matches an optional colon :
 \\s*	Matches zero or more spaces after the colon
 (.+)	Captures one or more of any character — this is the description
+---
+import java.util.regex.*;
 
+public class AuthResponseExtractor {
+    public static void main(String[] args) {
+        String input = "auth Response Code :   05 AND auth response description:  Do not honor and errorcode:67";
+
+        // Regex for Auth Response Code
+        Pattern codePattern = Pattern.compile(
+            "auth response code\\s*[:]?\\s*(\\S+)",
+            Pattern.CASE_INSENSITIVE);
+        Matcher codeMatcher = codePattern.matcher(input);
+
+        // Regex for Auth Response Description
+        Pattern descPattern = Pattern.compile(
+            "auth response description\\s*[:]?\\s*(.+)",
+            Pattern.CASE_INSENSITIVE);
+        Matcher descMatcher = descPattern.matcher(input);
+
+        // Regex for Error Code
+        Pattern errorCodePattern = Pattern.compile(
+            "errorcode\\s*[:]?\\s*(\\S+)",
+            Pattern.CASE_INSENSITIVE);
+        Matcher errorCodeMatcher = errorCodePattern.matcher(input);
+
+        // Extract each only if matched
+        if (codeMatcher.find()) {
+            System.out.println("Code: " + codeMatcher.group(1));
+        } else {
+            System.out.println("Code: not found");
+        }
+
+        if (descMatcher.find()) {
+            System.out.println("Description: " + descMatcher.group(1).trim());
+        } else {
+            System.out.println("Description: not found");
+        }
+
+        if (errorCodeMatcher.find()) {
+            System.out.println("ErrorCode: " + errorCodeMatcher.group(1));
+        } else {
+            System.out.println("ErrorCode: not found");
+        }
+    }
+}
 
