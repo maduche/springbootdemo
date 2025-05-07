@@ -152,3 +152,19 @@ try (MockedStatic<Files> filesMock = mockStatic(Files.class)) {
     // Now when your code calls Files.getLastModifiedTime(path), it returns mocked time.
 }
 
+--------------
+
+1. Unable to retrieve all debit cards associated with a pay-to account (when multiple debit cards exist)
+On analysis, it was found that an optimistic locking exception occurs while attempting to update the latest binInformation before sending the response.
+
+This issue was introduced as part of the changes made in WKJL-1223.
+
+To confirm the root cause, I temporarily removed the update logic and was able to successfully retrieve all associated debit card records.
+
+Action: This needs to be fixed to properly handle concurrent updates without affecting the result set.
+
+2. Invalid balance shown while adding a SavePayment method
+This is a known issue, and an enhancement story has already been created: WKJL-6831.
+
+The issue occurs due to incomplete balance data at the time of saving the payment method.
+
