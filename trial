@@ -153,6 +153,7 @@ try (MockedStatic<Files> filesMock = mockStatic(Files.class)) {
 }
 
 --------------
+SSS identified two issues during OCP APIGEE testing:
 
 1. Unable to retrieve all debit cards associated with a pay-to account (when multiple debit cards exist)
 On analysis, it was found that an optimistic locking exception occurs while attempting to update the latest binInformation before sending the response.
