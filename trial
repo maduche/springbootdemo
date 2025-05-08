@@ -169,3 +169,14 @@ This is a known issue, and an enhancement story has already been created: WKJL-6
 
 The issue occurs due to incomplete balance data at the time of saving the payment method.
 
+------------
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+Date filterDate = sdf.parse("Fri Mar 31 00:00:00 UTC 2028");
+
+// Use as before:
+Criteria criteria = Criteria.where("yourDateField").is(filterDate);
