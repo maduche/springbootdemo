@@ -202,3 +202,36 @@ Criteria criteria = Criteria.where("yourDateField").is(filterDate);
         UpdateResult result = mongoTemplate.updateMulti(query, update, YourDocument.class);
 
         System.out.println("Modified documents count: " + result.getModifiedCount());
+
+
+import java.util.Calendar;
+import java.util.Date;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+
+// Assume you already have this:
+Date filterDate = /* Fri Mar 31 00:00:00 UTC 2028 */;
+
+// Step 1: Compute start and end of the day
+Calendar cal = Calendar.getInstance();
+cal.setTime(filterDate);
+cal.set(Calendar.HOUR_OF_DAY, 0);
+cal.set(Calendar.MINUTE, 0);
+cal.set(Calendar.SECOND, 0);
+cal.set(Calendar.MILLISECOND, 0);
+Date startOfDay = cal.getTime();
+
+cal.add(Calendar.DATE, 1);
+Date startOfNextDay = cal.getTime();
+
+// Step 2: Query: date < startOfDay OR date >= startOfNextDay
+Query query = new Query(new Criteria().orOperator(
+    Criteria.where("dateField").lt(startOfDay),
+    Criteria.where("dateField").gte(startOfNextDay)
+));
+
+// Step 3: Update
+Update update = new Update().set("status", "not-matching-day");
+mongoTemplate.updateMulti(query, update, YourDocumentClass.class);
+
