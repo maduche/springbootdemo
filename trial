@@ -180,3 +180,25 @@ Date filterDate = sdf.parse("Fri Mar 31 00:00:00 UTC 2028");
 
 // Use as before:
 Criteria criteria = Criteria.where("yourDateField").is(filterDate);
+
+-------
+// Parse input date string
+        String input = "Fri Mar 31 00:00:00 UTC 2028";
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date targetDate = sdf.parse(input);
+
+        // Ensure milliseconds are 0
+        targetDate.setTime(targetDate.getTime() - (targetDate.getTime() % 1000));
+
+        // Build query: where date != targetDate
+        Query query = new Query(Criteria.where("yourDateField").ne(targetDate));
+
+        // Define update operation
+        Update update = new Update();
+        update.set("status", "updated");
+
+        // Execute updateMulti
+        UpdateResult result = mongoTemplate.updateMulti(query, update, YourDocument.class);
+
+        System.out.println("Modified documents count: " + result.getModifiedCount());
