@@ -235,3 +235,31 @@ Query query = new Query(new Criteria().orOperator(
 Update update = new Update().set("status", "not-matching-day");
 mongoTemplate.updateMulti(query, update, YourDocumentClass.class);
 
+
+---------------
+import java.util.Calendar;
+import java.util.Date;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+
+// Assume you have a java.util.Date for the date you want to match
+Date filterDate = ...; // e.g., 2028-03-31
+
+// Step 1: Set time to 00:00:00.000
+Calendar cal = Calendar.getInstance();
+cal.setTime(filterDate);
+cal.set(Calendar.HOUR_OF_DAY, 0);
+cal.set(Calendar.MINUTE, 0);
+cal.set(Calendar.SECOND, 0);
+cal.set(Calendar.MILLISECOND, 0);
+Date startOfDay = cal.getTime();
+
+// Step 2: Set time to 00:00:00.000 of the NEXT day
+cal.add(Calendar.DATE, 1);
+Date startOfNextDay = cal.getTime();
+
+// Step 3: Query for range
+Query query = new Query(Criteria.where("dateField")
+        .gte(startOfDay)
+        .lt(startOfNextDay));
+
