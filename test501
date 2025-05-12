@@ -59,3 +59,8 @@ Tools:
 Incident management platforms (e.g., PagerDuty, ServiceNow).
 Video conferencing and collaboration tools for real-time communication.
 
+----
+We’re working on it. Just wanted to check — is your environment currently pointing to OCP?
+
+If yes, we’ll share our test accounts to verify if it’s hitting OCP GUS.
+
