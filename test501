@@ -64,3 +64,14 @@ We’re working on it. Just wanted to check — is your environment currently po
 
 If yes, we’ll share our test accounts to verify if it’s hitting OCP GUS.
 
+------------
+We’d like to test a scenario for Pre-Charge-Off and Invalid Status (i.e., account status is not New or Open) from the CACS service.
+
+Currently, we don’t have any test accounts for this.
+Could you please help us get an account that matches these conditions?
+
+We’re specifically looking for:
+
+A Pre-Charge-Off account
+
+An account with status not equal to New or Open
