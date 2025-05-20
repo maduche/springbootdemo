@@ -85,3 +85,6 @@ I was able to go on Wednesday and Thursday, but couldn’t make it on Friday as 
 I’ll make up for that one day next week.
 
 Thanks for understanding!
+
+You asked me during the stand-up to check if failures are saved in the PayFromAgg collection when an ODCR account fails at the APS step.
+I’ve checked, and the failures are getting saved in the collection.
