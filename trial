@@ -264,16 +264,16 @@ Query query = new Query(Criteria.where("dateField")
         .lt(startOfNextDay));
 
 -------------------------
-I reviewed the ticket I created for the Orchestra Producer Retry issue and found the following:
+Before creating the ticket for Producer Retry, I reviewed the existing ticket I had created for the Orchestra Producer Retry issue and noted the following:
 
-Currently, senderMessageId and key are not being sent, but they are required to enable retry.
+senderMessageId and key are currently not being sent, but they are required to enable retry.
 
-Code changes are needed to support this, based on the Orchestra updates.
+Code changes are needed based on the Orchestra updates. Specifically, we should use KafkaMessage from Kafka (instead of POPS KafkaMessage) to properly set the headers. This will require thorough testing, as it is the main class used to publish messages.
 
-We need to check with downstream teams if they are okay with adding these two fields as headers.
+We need to confirm with downstream teams if they are okay with adding these two fields as headers.
 
-Some code comments mention that ECAR does not support key.
+Some code comments indicate that ECAR does not support key.
 
-However, I tested by adding both key and senderMessageId, and the retry works as expected. I’ve included the documentation for reference.
+However, I tested by adding both key and senderMessageId, and the retry worked as expected. I’ve attached the supporting documentation for reference.
 
-So, to enable retry from Orchestra, we need code changes and downstream approval.
+To move forward with enabling retry from Orchestra, we’ll need both code changes and downstream approval.
