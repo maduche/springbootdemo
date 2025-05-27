@@ -263,3 +263,17 @@ Query query = new Query(Criteria.where("dateField")
         .gte(startOfDay)
         .lt(startOfNextDay));
 
+-------------------------
+I reviewed the ticket I created for the Orchestra Producer Retry issue and found the following:
+
+Currently, senderMessageId and key are not being sent, but they are required to enable retry.
+
+Code changes are needed to support this, based on the Orchestra updates.
+
+We need to check with downstream teams if they are okay with adding these two fields as headers.
+
+Some code comments mention that ECAR does not support key.
+
+However, I tested by adding both key and senderMessageId, and the retry works as expected. I’ve included the documentation for reference.
+
+So, to enable retry from Orchestra, we need code changes and downstream approval.
