@@ -277,3 +277,9 @@ Some code comments indicate that ECAR does not support key.
 However, I tested by adding both key and senderMessageId, and the retry worked as expected. I’ve attached the supporting documentation for reference.
 
 To move forward with enabling retry from Orchestra, we’ll need both code changes and downstream approval.
+
+While working on one of my development stories, I noticed that debit card reversals were occurring even in 96–94 success cases. I made a small change by adding a condition to ensure reversals are triggered only for failed cases.
+
+Would it be okay to include this change as part of the common changes in the upcoming order PR?
+
+
