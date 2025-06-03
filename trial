@@ -282,4 +282,8 @@ While working on one of my development stories, I noticed that debit card revers
 
 Would it be okay to include this change as part of the common changes in the upcoming order PR?
 
+---------
+Selective Retry Configuration for Kafka Topics in Orchestra
+Is the retry producer mechanism applicable to all topics, or can it be enabled for a specific topic only? For example, we have Topic A and Topic B, and we want to enable retry only for messages in Topic A if any messages fail to publish. Is this possible through Orchestra configuration?
+
 
