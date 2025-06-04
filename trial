@@ -1,5 +1,1 @@
-We have configured Orchestra Producer to retry all failed messages from the event store. Currently, if we enable retry, it processes all consume_error entries for all producer topics.
 
-However, we want to disable retries for Topic A and enable retries only for Topic B consume_error messages.
-
-Can this be controlled through Orchestra configurations to allow retry for specific topics only?
