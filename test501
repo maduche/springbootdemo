@@ -1,1 +1,14 @@
-
+db.orders.aggregate([
+  {
+    $match: {
+      status: "processed",
+      productCode: { $ne: "DDA" }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      totalAmount: { $sum: "$amount" }
+    }
+  }
+])
