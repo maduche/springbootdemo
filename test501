@@ -1,5 +1,1 @@
-Just checking — what should be the behavior when saving paymentAuthorization if DCBS returns code 51 during the 6:00 AM batch?
 
-Should we save the 6:00 AM response with code 51 and later update it with the 9:00 PM response?
-
-Also, we set the order status to "Initiated" before calling DCBS. Since this is common code, should we do the same during the 9:00 PM batch as well?
