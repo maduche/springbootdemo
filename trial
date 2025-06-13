@@ -1,1 +1,1 @@
-Just want to confirm—since the same application publishes and consumes messages, do we expect two separate records (one for publish_success and another for consume_success), or is the same record updated with both statuses?
+
