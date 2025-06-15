@@ -17,3 +17,6 @@ This is an existing issue, not introduced by the recent changes.
 Design Question:
 When CACS is enabled, should we call the CACS Get Account Details service for both Fiserv and CBP flows, or only for ODCR?
 
+// Set the latest amount in the request from the response.
+// The response holds the adjustable amount if an adjustment occurred, otherwise the original amount (in APS step).
+
