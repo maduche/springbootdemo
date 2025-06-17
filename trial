@@ -1,22 +1,3 @@
-APS Funding Step – Balance Retrieval Behavior Based on CACS Toggle
-
-When CACS Toggle is OFF:
-There are no issues retrieving the balance for both Debit and CBP payments of Fiserv and ODCR through the APS service.
-The Account Number is a mandatory field and is correctly passed in this flow.
-
-When CACS Toggle is ON:
-There is an issue retrieving the balance for CBP payments (for both Fiserv and ODCR) via the CACS Get Account Details service.
-This service requires both Account Number and Company Number.
-In the CBP flow, the Company Number is coming as null, which causes the balance retrieval to fail—so the step is bypassed.
-
-However, Debit payments are working as expected because both Account Number and Company Number are available from the DCBS call.
-
-Note:
-This is an existing issue, not introduced by the recent changes.
-
-Design Question:
-When CACS is enabled, should we call the CACS Get Account Details service for both Fiserv and CBP flows, or only for ODCR?
-
-// Set the latest amount in the request from the response.
-// The response holds the adjustable amount if an adjustment occurred, otherwise the original amount (in APS step).
-
+We saw Sev3 and Sev issues, and the same problem exists in the latest Orchestrator framework.
+The Orchestrator team mentioned that a new version will be released in a couple of weeks, and all Sev3 and Sev issues are expected to be resolved.
+We will test again with that version.
