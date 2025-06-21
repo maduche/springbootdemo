@@ -1,1 +1,2 @@
-Created a ticket and joined Orchestra hours. They confirmed retry settings can't be set for a specific template or topic — it's global. They will update this info by end of today.
+@Query("{ $and: [ { 'orderId': ?1 }, { $or: [ { 'createdAt': { $exists: false } }, { 'createdAt': { $gte: ?0 } } ] } ] }")
+List<YourDocument> findRecordsByCreatedAtOrMissingAndOrderId(Date oneHourAgo, String orderId);
