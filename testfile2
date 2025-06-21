@@ -1,2 +1,22 @@
 @Query("{ $and: [ { 'orderId': ?1 }, { $or: [ { 'createdAt': { $exists: false } }, { 'createdAt': { $gte: ?0 } } ] } ] }")
 List<YourDocument> findRecordsByCreatedAtOrMissingAndOrderId(Date oneHourAgo, String orderId);
+
+------
+@Query("{ 'orderId': ?1, $or: [ { 'createdAt': { $exists: false } }, { 'createdAt': { $gte: ?0 } } ] }")
+List<YourDocument> findRecordsByOrderIdAndCreatedAtCondition(Date oneHourAgo, String orderId);
+
+
+
+orderId': ?1 — exact match on orderId
+
+$or:
+
+createdAt is missing
+
+OR createdAt is within the last 1 hour
+
+Comma between orderId and $or is equivalent to wrapping both inside $and
+
+-----------
+Date oneHourAgo = new Date(System.currentTimeMillis() - 60 * 60 * 1000);
+List<YourDocument> result = yourRepository.findRecordsByOrderIdAndCreatedAtCondition(oneHourAgo, "ORD12345");
