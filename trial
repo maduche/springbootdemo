@@ -1,1 +1,4 @@
-{ "description": { "$regex": "payment", "$options": "i" } }
+@Query("{ 'orderId': ?1, $or: [ { 'createdAt': { $exists: false } }, { 'createdAt': { $gte: ?0 } } ] }")
+List<YourDocument> findRecordsByOrderIdAndCreatedAtCondition(Date oneHourAgo, String orderId);
+Date oneHourAgo = new Date(System.currentTimeMillis() - 60 * 60 * 1000);
+List<YourDocument> result = yourRepository.findRecordsByOrderIdAndCreatedAtCondition(oneHourAgo, "ORD12345");
