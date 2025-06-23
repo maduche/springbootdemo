@@ -1,1 +1,2 @@
-"As per this story, we mark the payment as FAILED and call reversal if any payment goes to TMS_IN_PROCESS. Since retry FAP looks for payments with status IN_PROCESS, after this change we will no longer have any TMS_IN_PROCESS payments."
+
+"We should consider this scenario and check the code to see how it behaves. Currently, the DCBS reversal is called twice: once when the order goes to IN_PROCESS, and again during the retry by FDP."
