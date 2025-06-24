@@ -1,1 +1,4 @@
+If any order goes to IN_PROCESS( fascade down or tms response our ) and we set the status to FAILED and trigger reversal then:
 
+FDP :what would be the failure message and fdp dtatus 
+UI : what would be the failure message ? 
