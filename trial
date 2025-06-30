@@ -1,1 +1,2 @@
-Right now, if any exception occurs (except for "facade down"), we show an internal server error on the UI and set the status to "failed". For "facade down", we are keeping the current behavior as is.
+
+"NSF payment moved to APS_IN_PROCESS state, but was later successfully processed by FDP retry."
