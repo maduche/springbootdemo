@@ -1,2 +1,1 @@
-
-"NSF payment moved to APS_IN_PROCESS state, but was later successfully processed by FDP retry."
+The NSF payment should be picked up at 9:30 PM EST and follow the standard FDP processing steps.
