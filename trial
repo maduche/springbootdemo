@@ -1,4 +1,1 @@
-@Query("{ 'orderId': ?1, $or: [ { 'createdAt': { $exists: false } }, { 'createdAt': { $gte: ?0 } } ] }")
-List<YourDocument> findRecordsByOrderIdAndCreatedAtCondition(Date oneHourAgo, String orderId);
-Date oneHourAgo = new Date(System.currentTimeMillis() - 60 * 60 * 1000);
-List<YourDocument> result = yourRepository.findRecordsByOrderIdAndCreatedAtCondition(oneHourAgo, "ORD12345");
+Right now, if any exception occurs (except for "facade down"), we show an internal server error on the UI and set the status to "failed". For "facade down", we are keeping the current behavior as is.
