@@ -1,4 +1,1 @@
-Publish/Consume Loop Not Sustained
-Our application is designed to both produce and consume messages within a maximum time window when specific conditions are met. However, this behavior is not working as expected.
-
-For example, when the status is reversal failed, we expect the message to be continuously published and consumed for up to an hour as long as the condition is met. However, in practice, messages are being published and consumed randomly and then stop unexpectedly.
+This error usually occurs when the payment method ID does not match any record in our POPS database, resulting in an error. The user should provide a valid payment method ID
