@@ -1,1 +1,1 @@
-This error usually occurs when the payment method ID does not match any record in our POPS database, resulting in an error. The user should provide a valid payment method ID
+As discussed, we will cancel the story since it requires design changes. We will create new stories after discussing the design with the team.
