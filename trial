@@ -1,1 +1,2 @@
-As discussed, we will cancel the story since it requires design changes. We will create new stories after discussing the design with the team.
+ChatGPT said:
+We can directly hit the reversal endpoint even if the order is down, ensuring we don't miss it within the token expiry time. Using the Orchestra retry configuration, we can call the DCBS endpoint to get the response.
