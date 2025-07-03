@@ -1,5 +1,5 @@
-
-We can directly hit the reversal endpoint even if the order is down, ensuring we don't miss it within the token expiry time. Using the Orchestra retry configuration, we can call the DCBS endpoint to get the response.
-
-Once a reversal failure is identified using an async call, we can repeatedly call the reversal endpoint for up to an hour to get a successful response. This approach is similar to how we handle canceling pending payments asynchronously in POPS. In this case, no changes are needed to the existing produce and consume code.
-Create a scheduler that runs every 10 minutes to collect failed records with lastUpdatedOn = -1. There is a chance the same record might appear in multiple batches. In such cases, fetch the latest update, and if the reversal is not completed and the token is still valid, proceed to update the record.
+I tried adding Throwable, but didn’t catch any exception. This is because DCBS debit reversal throws an error only for non-success cases, 
+and even then, it includes the code and value in the response. Due to this behavior,
+ if any exception occurs in the facade layer, we still receive a DCBS response—unless the request itself is null.
+ 
+ Acknowledgment was added inside the try block, and now we are seeing record_consume_success.
