@@ -3,3 +3,8 @@ and even then, it includes the code and value in the response. Due to this behav
  if any exception occurs in the facade layer, we still receive a DCBS response—unless the request itself is null.
  
  Acknowledgment was added inside the try block, and now we are seeing record_consume_success.
+
+spring:
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
