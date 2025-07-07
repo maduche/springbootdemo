@@ -44,3 +44,25 @@ public class OrderPublisher {
         }
     }
 }
+
+
+-----------------
+import org.springframework.context.event.EventListener;
+import org.springframework.kafka.event.ConsumerPartitionAssignedEvent;
+import org.springframework.stereotype.Component;
+
+@Component
+public class KafkaListenerReadyTracker {
+
+    private volatile boolean partitionsAssigned = false;
+
+    @EventListener
+    public void onPartitionAssigned(ConsumerPartitionAssignedEvent event) {
+        System.out.println("✅ Partitions assigned to consumer.");
+        partitionsAssigned = true;
+    }
+
+    public boolean isListenerReady() {
+        return partitionsAssigned;
+    }
+}
