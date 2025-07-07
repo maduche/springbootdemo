@@ -9,3 +9,5 @@ public class HourDifferenceOldWay {
         System.out.println("Hours between: " + hoursDiff); // Output: 5
     }
 }
+
+We saw that some messages were marked as consumed even though they were not. Out of 10 messages, only 6 were really consumed, but 4 got the consumed status by mistake. We should only set the status after the message is actually consumed. Also, message consumption should be turned off in other environments.
