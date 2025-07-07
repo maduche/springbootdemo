@@ -1,10 +1,15 @@
-I tried adding Throwable, but didn’t catch any exception. This is because DCBS debit reversal throws an error only for non-success cases, 
-and even then, it includes the code and value in the response. Due to this behavior,
- if any exception occurs in the facade layer, we still receive a DCBS response—unless the request itself is null.
- 
- Acknowledgment was added inside the try block, and now we are seeing record_consume_success.
+@Component
+public class KafkaListenerReadyTracker {
 
-spring:
-  kafka:
-    consumer:
-      auto-offset-reset: earliest
+    private volatile boolean listenerReady = false;
+
+    @EventListener
+    public void onKafkaListenerStarted(org.springframework.kafka.event.ConsumerStartedEvent event) {
+        System.out.println("✅ Kafka Listener is ready.");
+        listenerReady = true;
+    }
+
+    public boolean isListenerReady() {
+        return listenerReady;
+    }
+}
