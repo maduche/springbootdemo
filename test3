@@ -1,3 +1,4 @@
+implementation 'org.springframework.kafka:spring-kafka:2.9.5'
 import org.springframework.stereotype.Component;
 import java.util.concurrent.atomic.AtomicBoolean;
 
