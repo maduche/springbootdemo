@@ -1,4 +1,92 @@
-If any order goes to IN_PROCESS( fascade down or tms response our ) and we set the status to FAILED and trigger reversal then:
+import org.springframework.stereotype.Component;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-FDP :what would be the failure message and fdp dtatus 
-UI : what would be the failure message ? 
+@Component
+public class KafkaReadinessTracker {
+    private final AtomicBoolean ready = new AtomicBoolean(false);
+
+    public boolean isReady() {
+        return ready.get();
+    }
+
+    public void markReady() {
+        ready.set(true);
+    }
+}
+
+------------
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+public class OrderPublisher {
+
+    private static final int BATCH_SIZE = 5;
+    private final List<String> orderBuffer = new ArrayList<>();
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private KafkaReadinessTracker readinessTracker;
+
+    public synchronized void addOrder(String order) {
+        orderBuffer.add(order);
+        System.out.println("📝 Order buffered: " + order);
+
+        if (orderBuffer.size() >= BATCH_SIZE) {
+            if (readinessTracker.isReady()) {
+                String batchMessage = String.join(",", orderBuffer);
+                kafkaTemplate.send("orders-topic", batchMessage);
+                System.out.println("✅ Sent to Kafka: " + batchMessage);
+                orderBuffer.clear();
+            } else {
+                System.out.println("⚠️ Kafka not ready. Holding messages.");
+            }
+        }
+    }
+
+    // Optional: manually flush pending messages once listener is ready
+    public synchronized void flushIfReady() {
+        if (readinessTracker.isReady() && !orderBuffer.isEmpty()) {
+            String batchMessage = String.join(",", orderBuffer);
+            kafkaTemplate.send("orders-topic", batchMessage);
+            System.out.println("🚀 Flushed pending messages: " + batchMessage);
+            orderBuffer.clear();
+        }
+    }
+}
+
+
+------------
+import org.apache.kafka.clients.consumer.Consumer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class OrderListener {
+
+    @Autowired
+    private KafkaReadinessTracker tracker;
+
+    @Autowired
+    private OrderPublisher publisher;
+
+    @KafkaListener(topics = "orders-topic", groupId = "order-group")
+    public void listen(String message, Consumer<?, ?> consumer) {
+        System.out.println("🎯 Kafka consumed: " + message);
+
+        // Mark the listener as ready the first time a message is received
+        if (!tracker.isReady()) {
+            tracker.markReady();
+            publisher.flushIfReady();  // flush any held messages
+        }
+    }
+}
+
