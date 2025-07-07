@@ -13,3 +13,34 @@ public class KafkaListenerReadyTracker {
         return listenerReady;
     }
 }
+
+
+--------------------
+@Component
+public class OrderPublisher {
+
+    private static final int BATCH_SIZE = 5;
+    private final List<String> orders = new ArrayList<>();
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private KafkaListenerReadyTracker tracker;
+
+    public synchronized void addOrder(String order) {
+        orders.add(order);
+        System.out.println("📝 Order added: " + order);
+
+        if (orders.size() >= BATCH_SIZE) {
+            if (tracker.isListenerReady()) {
+                String message = String.join(",", orders);
+                kafkaTemplate.send("orders-topic", message);
+                System.out.println("📤 Sent to Kafka: " + message);
+                orders.clear();
+            } else {
+                System.out.println("⚠️ Listener not ready — delaying publish.");
+            }
+        }
+    }
+}
