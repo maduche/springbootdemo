@@ -1,6 +1,6 @@
 We updated the design to use Orchestra retry, so it no longer sends the same message repeatedly. During testing, we noticed that some unique messages were marked as consume_success even though the consumer didn't process them.
 
-
+We are not publishing the same message again. Our design sends a unique message and retries using orchestration if there’s a consume failure. Now, we see some messages marked as consume_success even though they were not consumed. I’ll set up a meeting based on your availability, as this needs to be fixed for the release.
 
 public class HourDifferenceOldWay {
     public static void main(String[] args) {
