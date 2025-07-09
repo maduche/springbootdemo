@@ -1,3 +1,16 @@
+String input = "0000000164384";
+
+        // Convert to long
+        long number = Long.parseLong(input);
+
+        // Increment
+        number++;
+
+        // Format back with leading zeros (same length as original)
+        String output = String.format("%0" + input.length() + "d", number);
+
+        System.out.println("✅ Incremented: " + output);
+
 <dependency>
   <groupId>org.apache.kafka</groupId>
   <artifactId>kafka-clients</artifactId>
