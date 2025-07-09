@@ -1,3 +1,7 @@
+I prepared a standalone setup and published messages — everything looks good. It seems the issue might be with the Orchestra framework.
+
+
+
 implementation 'org.springframework.kafka:spring-kafka:2.9.5'
 import org.springframework.kafka.event.ConsumerPartitionsAssignedEvent;
 import org.springframework.stereotype.Component;
