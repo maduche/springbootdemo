@@ -1,3 +1,11 @@
+Query query = new Query();
+query.addCriteria(
+    Criteria.where("flag").is(null)
+            .and("status").is("NEW")
+);
+query.with(Sort.by(Sort.Direction.ASC, "lastUpdatedOn"));
+query.limit(10);
+
 @Query("{ 'flag': null }")
 List<YourEntity> findByFlagIsNullOrderByLastUpdatedOnAsc(Pageable pageable);
 PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lastUpdatedOn"));
