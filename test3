@@ -1,5 +1,5 @@
-I prepared a standalone setup and published messages — everything looks good. It seems the issue might be with the Orchestra framework.
-Verified the calendar. Due to the refinement, I’ve scheduled it for 11:30 PM EST.
+@Query("{ 'flag': null }")
+List<YourEntity> findByFlagIsNullOrderByLastUpdatedOnAsc(Pageable pageable);
 
 
 
