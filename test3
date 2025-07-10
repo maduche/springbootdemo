@@ -6,6 +6,13 @@ orders.stream()
     .forEach(order -> order.setLocked(true));
 
 
+orders.stream()
+    .forEach(order -> {
+        order.setLockFlag("Y");
+        order.setLastUpdatedOn(new Date());
+    });
+
+
 Query query = new Query();
 query.addCriteria(Criteria.where("flag").is(null));
 query.with(Sort.by(Sort.Direction.ASC, "lastUpdatedOn"));
