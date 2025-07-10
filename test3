@@ -1,3 +1,8 @@
+List<String> unlockedOrderIds = orders.stream()
+    .filter(order -> "N".equals(order.getLockFlag()))   // condition
+    .map(Order::getId)                                  // extract only ID
+    .collect(Collectors.toList());
+
 List<Order> newOrders = orders.stream()
     .filter(order -> "NEW".equals(order.getStatus()))
     .collect(Collectors.toList());
