@@ -4,6 +4,14 @@ PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "las
 repository.findByFlagIsNullOrderByLastUpdatedOnAsc(pageRequest);
 
 
+Query query = new Query();
+query.addCriteria(Criteria.where("flag").is(null));
+query.with(Sort.by(Sort.Direction.ASC, "lastUpdatedOn"));
+query.limit(10);
+
+List<YourEntity> result = mongoTemplate.find(query, YourEntity.class);
+
+
 
 implementation 'org.springframework.kafka:spring-kafka:2.9.5'
 import org.springframework.kafka.event.ConsumerPartitionsAssignedEvent;
