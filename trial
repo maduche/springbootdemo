@@ -1,3 +1,5 @@
+We will be testing the WKJL-9884 changes in UAT. For the next couple of hours, we will use some mock data. You might see unexpected results during this time. We will let you know once testing is done and the changes are reverted.
+
 @Component
 public class KafkaListenerReadyTracker {
 
