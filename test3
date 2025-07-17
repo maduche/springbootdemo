@@ -1,3 +1,10 @@
+I checked the code in the develop and integration branches. The effective payment date was being set after the DCBS authorization.
+
+It should be set before the authorization. Because of this, the old effective payment date was showing on UI and Digital.
+
+This issue is now fixed and working as expected. Please review.
+
+
 List<String> unlockedOrderIds = orders.stream()
     .filter(order -> "N".equals(order.getLockFlag()))   // condition
     .map(Order::getId)                                  // extract only ID
