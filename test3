@@ -1,3 +1,5 @@
+
+"withinHours is not used in the order code  I have verified. The CD environment still has this value due to the transition from the old Git to the new Git repository. So, please raise a PR for the CD repository only."
 I checked the code in the develop and integration branches. The effective payment date was being set after the DCBS authorization.
 
 It should be set before the authorization. Because of this, the old effective payment date was showing on UI and Digital.
