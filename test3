@@ -1,6 +1,10 @@
+I tried to disable str and enable man to test the dcbs.auth toggle off using the AVI load balancer, but I ran into some issues.
 
-"withinHours is not used in the order code  I have verified. The CD environment still has this value due to the transition from the old Git to the new Git repository. So, please raise a PR for the CD repository only."
-I checked the code in the develop and integration branches. The effective payment date was being set after the DCBS authorization.
+Then I reverted the changes and enabled str again for both order and facade, but I'm still seeing the same problem.
+
+Both order and facade services look healthy on the AVS load balancer, so I'm not sure what's missing on the AVI side.
+
+Can someone please check if anything else needs to be done in the AVI load balancer?
 
 It should be set before the authorization. Because of this, the old effective payment date was showing on UI and Digital.
 
