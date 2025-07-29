@@ -1,3 +1,7 @@
+db.myCollection.aggregate([
+  { $out: "myCollection_backup" }
+])
+
 Verified this order. Everything looks good with payment authorization, event store, audit history, and Splunk logs. I do not see any issues for this order.
 The "Pay From" account number is different from what I saw when I verified the order.
 
