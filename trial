@@ -1,3 +1,21 @@
+public class BinResponseWrapper {
+    private BinResponse data;
+
+    public BinResponse getData() {
+        return data;
+    }
+    public void setData(BinResponse data) {
+        this.data = data;
+    }
+}
+
+
+BinResponseWrapper wrapper = restTemplate.getForObject(url, BinResponseWrapper.class);
+BinResponse binResponse = wrapper.getData();
+
+----------------
+
+
 db.myCollection.aggregate([
   { $out: "myCollection_backup" }
 ])
