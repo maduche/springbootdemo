@@ -1,3 +1,12 @@
+ byte[] responseBytes = ex.getResponseBodyAsByteArray();
+    System.out.println("Bytes length: " + responseBytes.length);
+
+    // Convert to String if needed
+    String responseBody = new String(responseBytes, StandardCharsets.UTF_8);
+    System.out.println(responseBody);
+
+
+
 public class BinResponseWrapper {
     private BinResponse data;
 
