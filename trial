@@ -1,4 +1,11 @@
- byte[] responseBytes = ex.getResponseBodyAsByteArray();
+I checked with Karthik from the IDAD team, and he confirmed that HTTP 207 is not applicable for the IDAD BIN attribute flow.
+Please update the flow accordingly.
+
+Also, IDAD cannot produce a 500 status, since bringing down the server is not feasible.
+To test a 500 error scenario, we can simulate it using a similar type of error, as 500 is also treated as an error.
+
+
+byte[] responseBytes = ex.getResponseBodyAsByteArray();
     System.out.println("Bytes length: " + responseBytes.length);
 
     // Convert to String if needed
