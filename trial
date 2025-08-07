@@ -1,3 +1,26 @@
+After reviewing the Splunk logs, I found multiple application-related POPS exceptions, including:
+
+Payment method exists
+
+Payment series exists
+
+Reversal token expired
+
+Invalid account number from APS
+
+Breaking URL in DCBS reversal
+
+TMS-related errors (test environment)
+
+Additionally, there are several environment-related exceptions:
+
+Socket exceptions
+
+Cloud TLS exceptions
+
+Remote host terminated exceptions (likely due to load balancer issues)
+
+
 I checked with Karthik from the IDAD team, and he confirmed that HTTP 207 is not applicable for the IDAD BIN attribute flow.
 Please update the flow accordingly.
 
