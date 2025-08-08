@@ -1,6 +1,7 @@
 While reviewing the 09/20 PR, I noticed a small missing On-Us/Off-Us check in WKJL-9538 (FDP handling NSF payments) at the TMS step.
-It’s a rare and low-risk scenario, and the fix is minimal, but without it, Off-Us NSF payments may be treated as On-Us NSF payment
-I have the change ready. Please advise on how you’d like to proceed.
+The fix is minimal, but without it, Off-Us NSF payments are treated as On-Us NSF. Off-Us NSF payments are supposed to fail during the 6:00 AM FDP batch, but currently they fail at the 9:30 AM NSF batch.
+
+I have the change ready. Please advise how you’d like to proceed
 
 
 After reviewing the Splunk logs, I found multiple application-related POPS exceptions, including:
