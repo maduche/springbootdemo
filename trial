@@ -1,3 +1,8 @@
+While reviewing the 09/20 PR, I noticed a small missing On-Us/Off-Us check in WKJL-9538 (FDP handling NSF payments) at the TMS step.
+It’s a rare and low-risk scenario, and the fix is minimal, but without it, Off-Us NSF payments may be treated as On-Us.
+I have the change ready. Please advise on how you’d like to proceed.
+
+
 After reviewing the Splunk logs, I found multiple application-related POPS exceptions, including:
 
 Payment method exists
