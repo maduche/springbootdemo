@@ -1,3 +1,6 @@
+{{ availableBalance ? (availableBalance * 1 | currency:'USD':'symbol') : '' }}
+
+
 I tried to disable str and enable man to test the dcbs.auth toggle off using the AVI load balancer, but I ran into some issues.
 
 Then I reverted the changes and enabled str again for both order and facade, but I'm still seeing the same problem.
