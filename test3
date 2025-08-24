@@ -1,3 +1,7 @@
+spring.main.allow-bean-definition-overriding=true
+
+
+
 String field = "account.accountNumber";
 String[] parts = field.split("\\.");
 String last = parts[parts.length - 1]
