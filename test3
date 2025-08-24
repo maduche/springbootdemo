@@ -1,3 +1,8 @@
+String field = "account.accountNumber";
+String[] parts = field.split("\\.");
+String last = parts[parts.length - 1]
+
+
 public class ErrorCodeResolver {
 
     public static <E extends Enum<E>> E fromCode(Class<E> enumClass, String code) {
