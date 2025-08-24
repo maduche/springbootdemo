@@ -1,3 +1,27 @@
+public class ErrorCodeResolver {
+
+    public static <E extends Enum<E>> E fromCode(Class<E> enumClass, String code) {
+        for (E constant : enumClass.getEnumConstants()) {
+            try {
+                String popsCode = (String) enumClass
+                        .getMethod("getPopsErrorCode")
+                        .invoke(constant);
+                if (popsCode.equals(code)) {
+                    return constant;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Enum must have getPopsErrorCode()", e);
+            }
+        }
+        return null; // or throw custom exception
+    }
+}
+
+--------------------
+
+
+
+
 repositories {
     mavenCentral()
     flatDir {
