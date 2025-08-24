@@ -1,3 +1,11 @@
+jar {
+    archiveBaseName.set('my-app')      // base name of the jar
+    archiveVersion.set('1.0.0')        // version
+    archiveClassifier.set('')          // optional, like '-sources'
+}
+
+
+
 repositories {
     flatDir {
         dirs 'libs'
