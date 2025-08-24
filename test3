@@ -1,3 +1,16 @@
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'  // local folder for jars
+    }
+}
+
+dependencies {
+    implementation(name: 'my-local-lib', ext: 'jar')
+}
+
+
+
 jar {
     archiveBaseName.set('my-app')      // base name of the jar
     archiveVersion.set('1.0.0')        // version
