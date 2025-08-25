@@ -1,3 +1,30 @@
+@ExceptionHandler(Exception.class)
+  public ResponseEntity<Object> handleAny(Exception ex, WebRequest request) throws Exception {
+    // Let the specialized advice handle body/JSON parse errors
+    if (ex instanceof HttpMessageNotReadableException) throw ex;
+
+    // Build Problem Details response (same shape as screenshot)
+    return problem(HttpStatus.INTERNAL_SERVER_ERROR, 
+                   "An unexpected error occurred",
+                   request);
+  }
+
+  // Helper to build the screenshot format
+  private ResponseEntity<Object> problem(HttpStatus status, String detail, WebRequest request) {
+    String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+
+    ProblemDetail pd = ProblemDetail.forStatus(status);
+    pd.setType(URI.create("about:blank"));
+    pd.setTitle(status.getReasonPhrase());
+    pd.setDetail(detail);
+    pd.setInstance(URI.create(path));
+
+    return ResponseEntity.status(status).body(pd);
+  }
+
+
+
+
 spring.main.allow-bean-definition-overriding=true
 
 
