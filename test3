@@ -1,3 +1,6 @@
+ResponseEntity<?>
+
+
 @ExceptionHandler(Exception.class)
   public ResponseEntity<Object> handleAny(Exception ex, WebRequest request) throws Exception {
     // Let the specialized advice handle body/JSON parse errors
