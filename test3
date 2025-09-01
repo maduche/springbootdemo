@@ -1,4 +1,5 @@
-String body = ex.getResponseBodyAsString();   // <-- JSON string from server
+catch (HttpStatusCodeException ex) {        // 4xx/5xx from RestTemplate
+    String body = ex.getResponseBodyAsString();   // <-- JSON string from server
     String code = null;
 
     if (body != null && !body.isBlank()) {
@@ -13,6 +14,7 @@ String body = ex.getResponseBodyAsString();   // <-- JSON string from server
             if (c != null) code = c.asText();
         }
     }
+
 
 
 
