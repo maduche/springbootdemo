@@ -35,7 +35,8 @@ public class PstFutureOrPresentValidator implements ConstraintValidator<PstFutur
     @PstFutureOrPresent
     private LocalDate paymentDate;
 --------------------
-
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+----------------
 
 
 
