@@ -1,3 +1,41 @@
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import java.lang.annotation.*;
+
+@Documented
+@Constraint(validatedBy = PstFutureOrPresentValidator.class)
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PstFutureOrPresent {
+    String message() default "paymentDate must be today or in the future (Pacific Time)";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}
+
+---------------
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+public class PstFutureOrPresentValidator implements ConstraintValidator<PstFutureOrPresent, LocalDate> {
+    private static final ZoneId PT = ZoneId.of("America/Los_Angeles");
+    @Override
+    public boolean isValid(LocalDate value, ConstraintValidatorContext ctx) {
+        if (value == null) return true; // let @NotNull handle nulls
+        LocalDate todayPT = LocalDate.now(PT);
+        return !value.isBefore(todayPT);  // true if today or future
+    }
+}
+
+-------------------
+
+
+
+
+
+
+
 catch (HttpStatusCodeException ex) {        // 4xx/5xx from RestTemplate
     String body = ex.getResponseBodyAsString();   // <-- JSON string from server
     String code = null;
