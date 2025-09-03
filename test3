@@ -1,3 +1,57 @@
+import static org.junit.jupiter.api.Assertions.*;
+
+import jakarta.validation.ConstraintValidatorContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+class PstFutureOrPresentValidatorTest {
+
+    private final ZoneId PT = ZoneId.of("America/Los_Angeles");
+    private PstFutureOrPresentValidator validator;
+    private ConstraintValidatorContext ctx; // not used by validator, but pass a mock
+
+    @BeforeEach
+    void setUp() {
+        validator = new PstFutureOrPresentValidator();
+        ctx = Mockito.mock(ConstraintValidatorContext.class);
+    }
+
+    @Test
+    void null_is_considered_valid_let_NotNull_handle_it() {
+        assertTrue(validator.isValid(null, ctx));
+    }
+
+    @Test
+    void past_date_in_PT_is_invalid() {
+        LocalDate todayPT = LocalDate.now(PT);
+        LocalDate yesterdayPT = todayPT.minusDays(1);
+        assertFalse(validator.isValid(yesterdayPT, ctx));
+    }
+
+    @Test
+    void today_in_PT_is_valid() {
+        LocalDate todayPT = LocalDate.now(PT);
+        assertTrue(validator.isValid(todayPT, ctx));
+    }
+
+    @Test
+    void future_date_in_PT_is_valid() {
+        LocalDate todayPT = LocalDate.now(PT);
+        LocalDate tomorrowPT = todayPT.plusDays(1);
+        assertTrue(validator.isValid(tomorrowPT, ctx));
+    }
+}
+
+
+----------------
+
+
+
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;
