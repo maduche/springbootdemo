@@ -1,3 +1,26 @@
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.*;
+
+public class ReadAccountsTxt {
+  public static List<String> readPerLine(Path file) throws Exception {
+    try (Stream<String> lines = Files.lines(file, StandardCharsets.UTF_8)) {
+      return lines
+          .map(String::trim)
+          .filter(s -> !s.isEmpty())
+          .collect(Collectors.toList());     // each line already an account number
+    }
+  }
+
+  public static void main(String[] args) throws Exception {
+    Path path = Paths.get("C:/data/accounts.txt");
+    List<String> accounts = readPerLine(path);
+    accounts.forEach(System.out::println);
+  }
+}
+
+
 {
   "payToAccountNumber": 1,
   "nextDueDate": 1,
