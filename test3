@@ -1,3 +1,14 @@
+{
+  "payToAccountNumber": 1,
+  "nextDueDate": 1,
+  "hoganEntityInformation.customerNumber": 1,
+  "hoganEntityInformation.contactPhoneNumber": 1,
+  "cyclePaymentDue": 1,
+  "_id": 0
+}
+
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.validation.ConstraintValidatorContext;
