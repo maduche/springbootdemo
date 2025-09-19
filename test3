@@ -1,4 +1,9 @@
 accountDetails: { accountNumber: '1234567890' },
+          authorizedPayerId: 'ap-1'
+
+
+
+accountDetails: { accountNumber: '1234567890' },
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
