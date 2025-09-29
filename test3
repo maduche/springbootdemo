@@ -1,3 +1,63 @@
+
+@ExtendWith(MockitoExtension.class)
+class AchReferenceDetailDaoImplTest {
+
+    @Mock MongoTemplate mongoTemplate;
+    @Mock UniqueIdGenerator idGen;
+
+    ACHReferenceDetailDaoImpl dao;
+
+    @BeforeEach void setUp() {
+        dao = new ACHReferenceDetailDaoImpl(mongoTemplate, idGen);
+    }
+
+    @Test
+    void inserts_onFirstTry_returnsThatId() {
+        PaymentOrder po = new PaymentOrder("PO-1");
+
+        when(idGen.getUniqueRefId()).thenReturn("RID-1");
+
+        UpdateResult inserted = mock(UpdateResult.class);
+        when(inserted.getUpsertedId()).thenReturn(new BsonString("RID-1"));
+        when(mongoTemplate.upsert(any(Query.class), any(Update.class), eq(ACHReferenceDetail.class)))
+                .thenReturn(inserted);
+
+        String out = dao.saveAchRefID(po);
+
+        assertThat(out).isEqualTo("RID-1");
+        verify(mongoTemplate, times(1)).upsert(any(Query.class), any(Update.class), eq(ACHReferenceDetail.class));
+    }
+
+    @Test
+    void duplicate_then_insert_recurses_and_returnsSecondId() {
+        PaymentOrder po = new PaymentOrder("PO-1");
+
+        // generator returns a duplicate first, then a fresh id
+        when(idGen.getUniqueRefId()).thenReturn("DUP-1", "RID-2");
+
+        UpdateResult duplicate = mock(UpdateResult.class);
+        when(duplicate.getUpsertedId()).thenReturn(null);                // NO insert (duplicate)
+
+        UpdateResult inserted = mock(UpdateResult.class);
+        when(inserted.getUpsertedId()).thenReturn(new BsonString("RID-2"));
+
+        // first upsert -> duplicate, second -> inserted
+        when(mongoTemplate.upsert(any(Query.class), any(Update.class), eq(ACHReferenceDetail.class)))
+                .thenReturn(duplicate, inserted);
+
+        String out = dao.saveAchRefID(po);
+
+        assertThat(out).isEqualTo("RID-2");
+        verify(mongoTemplate, times(2)).upsert(any(Query.class), any(Update.class), eq(ACHReferenceDetail.class));
+
+        // (optional) assert the first query used DUP-1 and the second used RID-2
+        ArgumentCaptor<Query> qCap = ArgumentCaptor.forClass(Query.class);
+        verify(mongoTemplate, times(2)).upsert(qCap.capture(), any(Update.class), eq(ACHReferenceDetail.class));
+        assertThat(qCap.getAllValues().get(0).getQueryObject().get("_id")).isEqualTo("DUP-1");
+        assertThat(qCap.getAllValues().get(1).getQueryObject().get("_id")).isEqualTo("RID-2");
+    }
+}
+------------
 @Update(
     filter = "{ '_id': ?0 }",
     update = "{ '$setOnInsert': { 'paymentOrderId': ?1 } }",
