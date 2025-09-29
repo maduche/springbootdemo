@@ -22,6 +22,21 @@ if (r.getUpsertedId() != null) {
   UpdateResult upsertIfAbsent(String id, String paymentOrderId);
 
 
+
+ Query q = Query.query(Criteria.where("_id").is(id));
+        Update u = new Update()
+                // _id can come from the query; keeping this is harmless
+                .setOnInsert("_id", id)
+                .setOnInsert("paymentOrderId", paymentOrder.getOrderId());
+
+        UpdateResult r = mongoTemplate.upsert(q, u, ACHReferenceDetail.class);
+
+        if (r.getUpsertedId() != null) {
+            // Inserted a brand-new document
+            return Optional.of(id);
+        }
+
+
 --------------
 
 
