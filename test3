@@ -1,3 +1,5 @@
+.\gradlew -q dependencies --configuration testRuntimeClasspath --console=plain *> deps.txt
+
 org.gradle.java.home=C:\\Program Files\\Eclipse Adoptium\\jdk-17
 
 
