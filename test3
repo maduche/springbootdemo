@@ -1,3 +1,23 @@
+@Update(
+    filter = "{ '_id': ?0 }",
+    update = "{ '$setOnInsert': { 'paymentOrderId': ?1 } }",
+    upsert = true
+  )
+  UpdateResult upsertIfAbsent(String id, String paymentOrderId);
+
+
+UpdateResult r = repo.upsertIfAbsent(id, paymentOrderId);
+if (r.getUpsertedId() != null) {
+    // inserted new
+} else {
+    // _id already existed (duplicate) — no exception, just handle as "already present"
+}
+
+
+--------------
+
+
+
 accountDetails: { accountNumber: '1234567890' },
           authorizedPayerId: 'ap-1'
 
