@@ -1,9 +1,19 @@
-db.payFromAccountInfo.aggregate([
+db.PayFromAccountInformation.aggregate([
+  // 1) One row per account in the accounts array
+  { $unwind: "$accounts" },
+
+  // 2) Turn the string balance into a number (strip commas/currency if needed)
   {
     $addFields: {
       numericBalance: {
         $convert: {
-          input: "$accounts.availableBalance",
+          input: {
+            $replaceAll: {
+              input: { $toString: "$accounts.availableBalance" },
+              find: ",",
+              replacement: ""
+            }
+          },
           to: "double",
           onError: 0,
           onNull: 0
@@ -11,20 +21,27 @@ db.payFromAccountInfo.aggregate([
       }
     }
   },
+
+  // 3) Filter
   {
     $match: {
       numericBalance: { $gte: 5000 },
       "accounts.availableBalance": { $ne: "Unknown" }
     }
   },
+
+  // 4) Show the fields you care about
   {
     $project: {
+      _id: 0,
+      authorizedPayerId: 1,
       accountNumber: "$accounts.accountNumber",
       availableBalance: "$accounts.availableBalance",
       numericBalance: 1
     }
   }
 ]);
+
 
 
 
