@@ -1,3 +1,34 @@
+db.payFromAccountInfo.aggregate([
+  {
+    $addFields: {
+      numericBalance: {
+        $convert: {
+          input: "$accounts.availableBalance",
+          to: "double",
+          onError: 0,
+          onNull: 0
+        }
+      }
+    }
+  },
+  {
+    $match: {
+      numericBalance: { $gte: 5000 },
+      "accounts.availableBalance": { $ne: "Unknown" }
+    }
+  },
+  {
+    $project: {
+      accountNumber: "$accounts.accountNumber",
+      availableBalance: "$accounts.availableBalance",
+      numericBalance: 1
+    }
+  }
+]);
+
+
+
+
 .\gradlew -q dependencies --configuration testRuntimeClasspath --console=plain *> deps.txt
 
 org.gradle.java.home=C:\\Program Files\\Eclipse Adoptium\\jdk-17
